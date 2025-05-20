@@ -14,6 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.compose.rememberNavController
+import com.example.lyricsgame.ui.home.HomeScreen
+import com.example.lyricsgame.ui.navgraph.NavGraph
 import com.example.lyricsgame.ui.theme.LyricsGameTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -34,28 +37,17 @@ class MainActivity : ComponentActivity() {
         setContent {
             LyricsGameTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    NavGraph(navController = rememberNavController())
                 }
             }
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
 @Preview(showBackground = true)
 @Composable
 fun GreetingPreview() {
     LyricsGameTheme {
-        Greeting("Android")
     }
 }
