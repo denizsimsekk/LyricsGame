@@ -2,6 +2,7 @@ package com.example.lyricsgame.ui.home
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -32,16 +33,18 @@ import androidx.navigation.NavController
 import com.example.lyricsgame.ui.theme.robotoFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lyricsgame.data.model.Genre
+import com.example.lyricsgame.ui.navgraph.Route
 
 @Composable
 fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
-    MainContent(modifier = modifier)
+    MainContent(modifier = modifier, navController = navController)
 }
 
 @Composable
 fun MainContent(
     viewModel: HomeViewModel = hiltViewModel(),
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavController
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
@@ -79,26 +82,24 @@ fun MainContent(
         }
         LazyRow {
             items(uiState.genreList) { item ->
-                GenreItem(modifier, item)
+                GenreItem(modifier, item) {
+                    navController.navigate(Route.GameScreen.route)
+                }
             }
         }
     }
 }
 
 @Composable
-fun GenreItem(modifier: Modifier, genre: Genre) {
+fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
     Image(
         painter = painterResource(genre.cover),
         contentDescription = null,
         modifier
             .size(150.dp)
             .padding(4.dp)
+            .clickable {
+                onGenreSelected.invoke()
+            }
     )
-
-}
-
-@Composable
-@Preview
-fun MainContentPrev() {
-    MainContent()
 }
