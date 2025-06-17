@@ -1,5 +1,6 @@
 package com.example.lyricsgame.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -8,6 +9,9 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
@@ -19,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -26,6 +31,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.lyricsgame.ui.theme.robotoFamily
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.lyricsgame.data.model.Genre
 
 @Composable
 fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -37,7 +43,7 @@ fun MainContent(
     viewModel: HomeViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
-    val genreList by viewModel.genreList.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.getGenreList()
@@ -71,7 +77,24 @@ fun MainContent(
 
             }
         }
+        LazyRow {
+            items(uiState.genreList) { item ->
+                GenreItem(modifier, item)
+            }
+        }
     }
+}
+
+@Composable
+fun GenreItem(modifier: Modifier, genre: Genre) {
+    Image(
+        painter = painterResource(genre.cover),
+        contentDescription = null,
+        modifier
+            .size(150.dp)
+            .padding(4.dp)
+    )
+
 }
 
 @Composable

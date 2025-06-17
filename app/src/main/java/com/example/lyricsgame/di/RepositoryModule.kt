@@ -16,7 +16,7 @@ class RepositoryModule {
 
     @Provides
     @Singleton
-    fun provideGenreRepository(@ApplicationContext context: Context): IGenreRepository =
-        GenreRepositoryImpl(context)
+    fun provideGenreRepository(): IGenreRepository =
+        GenreRepositoryImpl()
 
 }

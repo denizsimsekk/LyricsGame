@@ -7,6 +7,7 @@ import com.example.lyricsgame.domain.usecase.GetGenreListUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -14,13 +15,13 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(private val getGenreListUseCase: GetGenreListUseCase) :
     ViewModel() {
 
-    private val _genreList = MutableStateFlow<List<Genre>>(listOf())
-    val genreList = _genreList.asStateFlow()
+    private val _uiState = MutableStateFlow(HomeUiState())
+    val uiState = _uiState.asStateFlow()
 
     fun getGenreList() {
         viewModelScope.launch {
-            getGenreListUseCase.invoke().collect {
-                _genreList.emit(it)
+            getGenreListUseCase.invoke().collect { response ->
+                _uiState.update { it.copy(genreList = response) }
             }
         }
     }
