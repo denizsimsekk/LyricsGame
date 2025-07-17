@@ -83,7 +83,7 @@ fun MainContent(
         LazyRow {
             items(uiState.genreList) { item ->
                 GenreItem(modifier, item) {
-                    navController.navigate(Route.GameScreen(item.name))
+                    navController.navigate(Route.GameScreen(item.id))
                 }
             }
         }

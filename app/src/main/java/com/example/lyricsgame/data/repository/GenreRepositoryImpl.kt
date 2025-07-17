@@ -12,12 +12,12 @@ class GenreRepositoryImpl @Inject constructor(
     override fun getGenreList(): Flow<List<Genre>> = flow {
         emit(
             listOf(
-                Genre("Pop", R.drawable.ic_pop_cover),
-                Genre("Rock", R.drawable.ic_rock_cover),
-                Genre("Rap", R.drawable.ic_rap_cover),
-                Genre("Country", R.drawable.ic_country_cover),
-                Genre("Jazz", R.drawable.ic_jazz_cover),
-                Genre("Metal", R.drawable.ic_metal_cover)
+                Genre(id = 0, name = "Pop", cover = R.drawable.ic_pop_cover),
+                Genre(id = 1, name = "Rock", cover = R.drawable.ic_rock_cover),
+                Genre(id = 2, name = "Rap", cover = R.drawable.ic_rap_cover),
+                Genre(id = 3, name = "Country", cover = R.drawable.ic_country_cover),
+                Genre(id = 4, name = "Jazz", cover = R.drawable.ic_jazz_cover),
+                Genre(id = 5, name = "Metal", cover = R.drawable.ic_metal_cover)
             )
         )
     }

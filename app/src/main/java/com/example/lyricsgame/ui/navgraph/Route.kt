@@ -7,5 +7,5 @@ sealed class Route {
     object HomeScreen : Route()
 
     @Serializable
-    data class GameScreen(val genre: String) : Route()
+    data class GameScreen(val genreId: Int) : Route()
 }

@@ -21,7 +21,7 @@ fun NavGraph(
         composable<Route.GameScreen> { backStackEntry->
             val args = backStackEntry.toRoute<Route.GameScreen>()
             GameScreen(
-                genre = args.genre
+                genreId = args.genreId
             )
         }
 
