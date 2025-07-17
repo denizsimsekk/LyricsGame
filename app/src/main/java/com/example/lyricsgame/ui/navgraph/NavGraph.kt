@@ -4,24 +4,26 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.navigation.toRoute
 import com.example.lyricsgame.ui.game.GameScreen
 import com.example.lyricsgame.ui.home.HomeScreen
+
 
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String = Route.HomeGraph.route
 ) {
-    NavHost(navController, startDestination)
+    NavHost(navController, Route.HomeScreen)
     {
-        navigation(startDestination = Route.HomeScreen.route, route = Route.HomeGraph.route) {
-            composable(Route.HomeScreen.route) {
-                HomeScreen(navController = navController)
-            }
-            composable(Route.GameScreen.route) {
-                GameScreen()
-            }
+        composable<Route.HomeScreen> {
+            HomeScreen(navController = navController)
         }
+        composable<Route.GameScreen> { backStackEntry->
+            val args = backStackEntry.toRoute<Route.GameScreen>()
+            GameScreen(
+                genre = args.genre
+            )
+        }
+
     }
 }
