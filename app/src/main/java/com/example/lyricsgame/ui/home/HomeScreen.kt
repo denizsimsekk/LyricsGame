@@ -15,7 +15,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -25,14 +24,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.lyricsgame.ui.theme.robotoFamily
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.lyricsgame.data.model.Genre
+import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
 
 @Composable
@@ -57,9 +54,8 @@ fun MainContent(
             .background(Color.White)
             .padding(16.dp)
     ) {
-        Text(
-            "Welcome to the Guess The Lyrics!",
-            style = TextStyle(fontFamily = robotoFamily, fontWeight = FontWeight.Bold)
+        AppText(
+            "Welcome to the Guess The Lyrics!", fontWeight = FontWeight.Bold
         )
         Row(
             modifier
@@ -68,7 +64,7 @@ fun MainContent(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Explore Music Genres", fontFamily = robotoFamily, fontWeight = FontWeight.Bold)
+            AppText("Explore Music Genres", fontWeight = FontWeight.Bold)
 
             Button(
                 onClick = {
@@ -76,7 +72,10 @@ fun MainContent(
                 colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
-                Text("Discover", fontFamily = robotoFamily)
+                AppText(
+                    text = "Discover",
+                    color = Color.White,
+                    modifier = modifier.clickable { navController.navigate(Route.GenreListScreen) })
 
             }
         }

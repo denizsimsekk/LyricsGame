@@ -1,0 +1,27 @@
+package com.example.lyricsgame.ui.common
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.sp
+import com.example.lyricsgame.ui.theme.robotoFamily
+
+@Composable
+fun AppText(
+    text: String, modifier: Modifier = Modifier,
+    size: TextUnit = 14.sp,
+    color: Color = Color.Black,
+    fontWeight: FontWeight = FontWeight.Normal
+) {
+    Text(
+        text = text,
+        modifier = modifier,
+        fontFamily = robotoFamily,
+        fontWeight = fontWeight,
+        fontSize = size,
+        color = color
+    )
+}

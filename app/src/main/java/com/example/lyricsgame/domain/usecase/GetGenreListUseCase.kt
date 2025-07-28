@@ -7,7 +7,7 @@ import javax.inject.Inject
 
 class GetGenreListUseCase @Inject constructor(private val genreRepository: IGenreRepository) {
 
-    operator fun invoke(): Flow<List<Genre>> {
+    operator fun invoke(): List<Genre> {
         return genreRepository.getGenreList()
     }
 }

@@ -1,0 +1,6 @@
+package com.example.lyricsgame.data.model
+
+import kotlinx.serialization.Serializable
+
+@Serializable
+data class Artist(val id: Int, val name: String)

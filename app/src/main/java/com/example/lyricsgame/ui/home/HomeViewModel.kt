@@ -18,11 +18,7 @@ class HomeViewModel @Inject constructor(private val getGenreListUseCase: GetGenr
     val uiState = _uiState.asStateFlow()
 
     fun getGenreList() {
-        viewModelScope.launch {
-            getGenreListUseCase.invoke().collect { response ->
-                _uiState.update { it.copy(genreList = response) }
-            }
-        }
+        _uiState.update { it.copy(genreList = getGenreListUseCase.invoke()) }
     }
 
 }
