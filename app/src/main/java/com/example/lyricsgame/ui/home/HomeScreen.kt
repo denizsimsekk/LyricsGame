@@ -22,15 +22,19 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.lyricsgame.R
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
+import com.example.lyricsgame.ui.theme.charcoal
 
 @Composable
 fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -52,14 +56,24 @@ fun MainContent(
         modifier
             .fillMaxSize()
             .background(Color.White)
-            .padding(16.dp)
     ) {
-        AppText(
-            "Welcome to the Guess The Lyrics!", fontWeight = FontWeight.Bold
-        )
+        Row(
+            modifier = modifier
+                .background(Color.Black)
+                .padding(16.dp)
+                .fillMaxWidth()
+        ) {
+            AppText(
+                text = "Welcome to the Guess The Lyrics!",
+                fontWeight = FontWeight.SemiBold,
+                size = 18.sp,
+                modifier = modifier.padding(horizontal = 8.dp),
+                color = Color.White
+            )
+        }
         Row(
             modifier
-                .padding(top = 16.dp)
+                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
@@ -69,7 +83,7 @@ fun MainContent(
             Button(
                 onClick = {
                 }, shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                colors = ButtonDefaults.buttonColors(containerColor = charcoal),
                 contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
             ) {
                 AppText(
@@ -79,7 +93,7 @@ fun MainContent(
 
             }
         }
-        LazyRow {
+        LazyRow(modifier = modifier.padding(horizontal = 16.dp)) {
             items(uiState.genreList) { item ->
                 GenreItem(modifier, item) {
                     navController.navigate(Route.GameScreen(item.id))

@@ -12,7 +12,7 @@ import com.example.lyricsgame.ui.theme.robotoFamily
 @Composable
 fun AppText(
     text: String, modifier: Modifier = Modifier,
-    size: TextUnit = 14.sp,
+    size: TextUnit = 16.sp,
     color: Color = Color.Black,
     fontWeight: FontWeight = FontWeight.Normal
 ) {

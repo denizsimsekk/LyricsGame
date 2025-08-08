@@ -23,17 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewParameter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.lyricsgame.R
+import androidx.navigation.NavController
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
+import com.example.lyricsgame.ui.common.AppTopBar
 
 @Composable
 fun GenreListScreen(
+    navController: NavController,
     viewModel: GenreListViewModel = hiltViewModel(),
     modifier: Modifier = Modifier
 ) {
@@ -43,6 +43,9 @@ fun GenreListScreen(
     }
 
     Column(modifier = modifier.fillMaxSize()) {
+        AppTopBar(title = "Genres") {
+            navController.popBackStack()
+        }
         AppText(
             "Choose a genre to start playing.",
             modifier = modifier.padding(start = 16.dp, top = 16.dp),
@@ -74,7 +77,7 @@ fun GenreItem(genre: Genre, modifier: Modifier = Modifier) {
                 .size(96.dp)
                 .padding(start = 8.dp, top = 6.dp, bottom = 6.dp, end = 6.dp)
         )
-        Column(modifier = modifier.padding(8.dp),verticalArrangement = Arrangement.Center) {
+        Column(modifier = modifier.padding(8.dp), verticalArrangement = Arrangement.Center) {
             AppText(genre.name, fontWeight = FontWeight.Bold, size = 18.sp)
             AppText(genre.description)
         }

@@ -26,7 +26,7 @@ fun NavGraph(
             )
         }
         composable<Route.GenreListScreen> { backStackEntry ->
-            GenreListScreen()
+            GenreListScreen(navController = navController)
         }
 
     }
