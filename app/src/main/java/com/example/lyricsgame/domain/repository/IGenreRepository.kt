@@ -1,10 +1,11 @@
 package com.example.lyricsgame.domain.repository
 
-import com.example.lyricsgame.data.model.Genre
+import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.model.GenreViewEntity
 import kotlinx.coroutines.flow.Flow
 
 interface IGenreRepository {
 
-    fun getGenreList(): List<Genre>
+    fun getGenreList():  Flow<Resource<List<GenreViewEntity>>>
 
 }

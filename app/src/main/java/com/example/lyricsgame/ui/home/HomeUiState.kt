@@ -1,5 +1,5 @@
 package com.example.lyricsgame.ui.home
 
-import com.example.lyricsgame.data.model.Genre
+import com.example.lyricsgame.domain.model.GenreViewEntity
 
-data class HomeUiState(var genreList: List<Genre> = listOf())
+data class HomeUiState(var genreList: List<GenreViewEntity> = listOf())

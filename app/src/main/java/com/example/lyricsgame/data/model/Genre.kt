@@ -1,12 +1,12 @@
 package com.example.lyricsgame.data.model
 
-import androidx.annotation.DrawableRes
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class Genre(
     val id: Int,
     val name: String,
-    @DrawableRes val cover: Int,
-    val description: String
+    val picture: String,
+    val picture_big: String,
+    val picture_medium: String,
+    val picture_small: String,
+    val picture_xl: String,
+    val type: String
 )

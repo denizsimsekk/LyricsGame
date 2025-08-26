@@ -43,6 +43,7 @@ android {
 }
 
 val nav_version = "2.9.0"
+val retrofit_version = "2.9.0"
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -71,5 +72,16 @@ dependencies {
     ksp("com.google.dagger:hilt-android-compiler:2.56.2")
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
+
+    implementation (libs.converter.gson)
+    implementation (libs.retrofit)
+    implementation ("com.google.code.gson:gson:2.13.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.1")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.8.4")
+    implementation ("androidx.compose.runtime:runtime-livedata:1.7.8")
+
+    implementation("io.coil-kt:coil:2.6.0")            // for ImageView
+    implementation("io.coil-kt:coil-compose:2.6.0")   // for Jetpack Compose
 
 }

@@ -1,6 +1,5 @@
 package com.example.lyricsgame.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,16 +21,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.lyricsgame.R
-import com.example.lyricsgame.data.model.Genre
+import coil.compose.AsyncImage
+import com.example.lyricsgame.domain.model.GenreViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
 import com.example.lyricsgame.ui.theme.charcoal
@@ -104,11 +101,11 @@ fun MainContent(
 }
 
 @Composable
-fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
-    Image(
-        painter = painterResource(genre.cover),
+fun GenreItem(modifier: Modifier, genre: GenreViewEntity, onGenreSelected: () -> Unit) {
+    AsyncImage(
+        model = genre.picture,
         contentDescription = null,
-        modifier
+        modifier = modifier
             .size(150.dp)
             .padding(4.dp)
             .clickable {
