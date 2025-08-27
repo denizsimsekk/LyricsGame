@@ -28,7 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
-import com.example.lyricsgame.domain.model.GenreViewEntity
+import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
 import com.example.lyricsgame.ui.theme.charcoal
@@ -101,7 +101,7 @@ fun MainContent(
 }
 
 @Composable
-fun GenreItem(modifier: Modifier, genre: GenreViewEntity, onGenreSelected: () -> Unit) {
+fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
     AsyncImage(
         model = genre.picture,
         contentDescription = null,

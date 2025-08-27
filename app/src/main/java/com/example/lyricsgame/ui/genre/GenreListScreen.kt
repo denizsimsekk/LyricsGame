@@ -27,7 +27,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.lyricsgame.domain.model.GenreViewEntity
+import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
 
@@ -62,7 +62,7 @@ fun GenreListScreen(
 }
 
 @Composable
-fun GenreItem(genre: GenreViewEntity, modifier: Modifier = Modifier) {
+fun GenreItem(genre: Genre, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .padding(horizontal = 16.dp, vertical = 8.dp)

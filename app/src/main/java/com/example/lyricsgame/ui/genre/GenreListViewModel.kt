@@ -3,7 +3,6 @@ package com.example.lyricsgame.ui.genre
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.usecase.GetGenreListUseCase
 import com.example.lyricsgame.ui.BaseViewModel
-import com.example.lyricsgame.ui.home.HomeUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +14,7 @@ import javax.inject.Inject
 class GenreListViewModel @Inject constructor(private val getGenreListUseCase: GetGenreListUseCase) :
     BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(GenreUiState())
     val uiState = _uiState.asStateFlow()
 
     fun getGenreList() {
