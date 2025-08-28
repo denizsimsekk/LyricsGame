@@ -1,5 +1,6 @@
 package com.example.lyricsgame.ui.home
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -22,12 +23,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
+import com.example.lyricsgame.R
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
@@ -68,40 +72,54 @@ fun MainContent(
                 color = Color.White
             )
         }
-        Row(
-            modifier
-                .padding(start = 16.dp, end = 16.dp, top = 16.dp)
-                .fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
+        GenreListSection(uiState = uiState, navController = navController)
+        GlobalChartSection(navController = navController)
+
+
+    }
+}
+
+@Composable
+private fun GenreListSection(uiState: HomeUiState, navController: NavController, modifier: Modifier = Modifier) {
+    Row(
+        modifier
+            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        AppText("Explore Music Genres", fontWeight = FontWeight.Bold)
+
+        Button(
+            onClick = {
+            }, shape = RectangleShape,
+            colors = ButtonDefaults.buttonColors(containerColor = charcoal),
+            contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
         ) {
-            AppText("Explore Music Genres", fontWeight = FontWeight.Bold)
+            AppText(
+                text = "Discover More",
+                color = Color.White,
+                modifier = modifier.clickable { navController.navigate(Route.GenreListScreen) })
 
-            Button(
-                onClick = {
-                }, shape = RectangleShape,
-                colors = ButtonDefaults.buttonColors(containerColor = charcoal),
-                contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
-            ) {
-                AppText(
-                    text = "Discover",
-                    color = Color.White,
-                    modifier = modifier.clickable { navController.navigate(Route.GenreListScreen) })
-
-            }
         }
-        LazyRow(modifier = modifier.padding(horizontal = 16.dp)) {
-            items(uiState.genreList) { item ->
-                GenreItem(modifier, item) {
-                    navController.navigate(Route.GameScreen(item.id))
-                }
+    }
+    LazyRow(modifier = modifier.padding(horizontal = 16.dp)) {
+        items(uiState.genreList) { item ->
+            GenreItem(modifier, item) {
+                navController.navigate(Route.GameScreen(item.id))
             }
         }
     }
 }
 
 @Composable
-fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
+private fun GlobalChartSection(navController: NavController, modifier: Modifier = Modifier) {
+    AppText("Explore Global Chart", fontWeight = FontWeight.Bold, modifier = modifier.padding(16.dp))
+    Image(painter = painterResource(R.drawable.global_chart_banner), contentDescription = null, modifier = modifier.padding(horizontal = 16.dp))
+}
+
+@Composable
+private fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
     AsyncImage(
         model = genre.picture,
         contentDescription = null,
