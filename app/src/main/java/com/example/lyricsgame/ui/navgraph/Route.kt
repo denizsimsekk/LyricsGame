@@ -11,4 +11,7 @@ sealed class Route {
 
     @Serializable
     object GenreListScreen : Route()
+
+    @Serializable
+    object SearchScreen : Route()
 }

@@ -3,6 +3,7 @@ package com.example.lyricsgame.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.runtime.Composable
@@ -57,6 +60,7 @@ fun MainContent(
         modifier
             .fillMaxSize()
             .background(Color.White)
+            .verticalScroll(rememberScrollState())
     ) {
         Row(
             modifier = modifier
@@ -74,6 +78,7 @@ fun MainContent(
         }
         GenreListSection(uiState = uiState, navController = navController)
         GlobalChartSection(navController = navController)
+        SearchYourFavoriteArtistsSection(navController = navController)
 
 
     }
@@ -116,6 +121,17 @@ private fun GenreListSection(uiState: HomeUiState, navController: NavController,
 private fun GlobalChartSection(navController: NavController, modifier: Modifier = Modifier) {
     AppText("Explore Global Chart", fontWeight = FontWeight.Bold, modifier = modifier.padding(16.dp))
     Image(painter = painterResource(R.drawable.global_chart_banner), contentDescription = null, modifier = modifier.padding(horizontal = 16.dp))
+}
+
+@Composable
+private fun SearchYourFavoriteArtistsSection(navController: NavController, modifier: Modifier = Modifier) {
+    AppText("List Your Favorite Artists", fontWeight = FontWeight.Bold, modifier = modifier.padding(16.dp))
+    Image(painter = painterResource(R.drawable.search_artists_banner), contentDescription = null, modifier = modifier
+        .fillMaxWidth()
+        .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
+        .clickable {
+            navController.navigate(Route.SearchScreen)
+        })
 }
 
 @Composable
