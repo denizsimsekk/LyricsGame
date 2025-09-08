@@ -1,9 +1,11 @@
 package com.example.lyricsgame.data.remote
 
+import com.example.lyricsgame.data.model.Artist
 import com.example.lyricsgame.data.model.ChartItem
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.data.model.ResponseDto
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 interface Api {
 
@@ -12,5 +14,10 @@ interface Api {
 
     @GET("chart")
     suspend fun getGlobalChart(): ResponseDto<List<ChartItem>>
+
+    @GET("genre/{genreId}/artists")
+    suspend fun getArtistListByGenre(
+        @Path("genreId") genreId: Int,
+    ): ResponseDto<List<Artist>>
 
 }

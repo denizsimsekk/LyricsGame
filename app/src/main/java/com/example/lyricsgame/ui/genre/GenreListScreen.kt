@@ -2,6 +2,7 @@ package com.example.lyricsgame.ui.genre
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,6 +31,7 @@ import coil.compose.AsyncImage
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
+import com.example.lyricsgame.ui.navgraph.Route
 
 @Composable
 fun GenreListScreen(
@@ -54,7 +56,7 @@ fun GenreListScreen(
         )
         LazyColumn(modifier.fillMaxSize()) {
             items(uiState.genreList) { genre ->
-                GenreItem(genre)
+                GenreItem(genre = genre, navController = navController)
             }
         }
     }
@@ -62,9 +64,12 @@ fun GenreListScreen(
 }
 
 @Composable
-fun GenreItem(genre: Genre, modifier: Modifier = Modifier) {
+fun GenreItem(genre: Genre, navController: NavController, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
+            .clickable {
+                navController.navigate(Route.GameScreen(genre.id))
+            }
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(4.dp))
             .fillMaxWidth(),
