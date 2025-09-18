@@ -1,6 +1,13 @@
 package com.example.lyricsgame.ui.game
 
+import android.annotation.SuppressLint
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -13,6 +20,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -28,10 +36,10 @@ fun GameScreen(genreId: Int, modifier: Modifier = Modifier) {
 
 @Composable
 private fun MainContent(viewModel: GameViewModel) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.updateRemainingTime()
     }
-    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     CountdownTimer(uiState = uiState)
 }
 
@@ -42,10 +50,12 @@ fun CountdownTimer(uiState: GameUiState) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        AppText(
-            text = if (uiState.remainingTimeToStartGame > 0) uiState.remainingTimeToStartGame.toString() else "Go!",
-            size = 48.sp,
-            fontWeight = FontWeight.Bold,
-        )
+        AnimatedContent(targetState = uiState.remainingTimeToStartGame.toString(), label = "CountDownTimerText") {
+            AppText(
+                text = if (uiState.remainingTimeToStartGame > 0) it else "Go!",
+                size = 48.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        }
     }
 }
