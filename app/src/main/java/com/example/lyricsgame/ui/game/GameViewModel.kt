@@ -19,7 +19,7 @@ class GameViewModel @Inject constructor() : ViewModel() {
     private var remainingSeconds = 3
 
     fun updateRemainingTime() {
-        timer = fixedRateTimer(initialDelay = 3000L, period = 1000L) {
+        timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
             remainingSeconds--
             _uiState.update {
                 it.copy(remainingTimeToStartGame = remainingSeconds)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -24,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
@@ -136,14 +138,31 @@ private fun SearchYourFavoriteArtistsSection(navController: NavController, modif
 
 @Composable
 private fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
-    AsyncImage(
-        model = genre.picture,
-        contentDescription = null,
+    Box(
         modifier = modifier
             .size(150.dp)
             .padding(4.dp)
-            .clickable {
-                onGenreSelected.invoke()
-            }
-    )
+    ) {
+        AsyncImage(
+            model = genre.picture,
+            contentDescription = null,
+            modifier = modifier
+                .size(150.dp)
+                .clickable {
+                    onGenreSelected.invoke()
+                }
+        )
+        Box(
+            modifier = Modifier
+                .matchParentSize()
+                .background(Color.Black.copy(alpha = 0.4f))
+        )
+        AppText(
+            text = genre.name,
+            size = 20.sp,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.align(Alignment.Center)
+        )
+    }
 }
