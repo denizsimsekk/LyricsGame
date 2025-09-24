@@ -65,7 +65,7 @@ fun GenreItem(genre: Genre, navController: NavController, modifier: Modifier = M
     Row(
         modifier = modifier
             .clickable {
-                navController.navigate(Route.GameScreen(genre.id))
+                navController.navigate(Route.GameScreen(genreId = genre.id, genreName = genre.name))
             }
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(4.dp))

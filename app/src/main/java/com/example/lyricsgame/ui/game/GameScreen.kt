@@ -18,24 +18,24 @@ import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
 
 @Composable
-fun GameScreen(genreId: Int, navController: NavController, modifier: Modifier = Modifier) {
+fun GameScreen(genreId: Int, genreName: String, navController: NavController, modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
-        MainContent(navController = navController, viewModel = viewModel())
+        MainContent(genreId = genreId, genreName = genreName, navController = navController, viewModel = viewModel())
     }
 }
 
 @Composable
-private fun MainContent(navController: NavController, viewModel: GameViewModel) {
+private fun MainContent(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
-        viewModel.updateRemainingTime()
+        viewModel.getGenreSongList()
     }
     if (uiState.remainingTimeToStartGame > 0) {
         CountdownTimer(uiState = uiState)
     } else {
         Column(modifier = Modifier.fillMaxSize()) {
             AppTopBar(
-                title = "Genre Name" //TODO
+                title = genreName
             ) {
                 navController.popBackStack()
             }

@@ -18,6 +18,10 @@ class GameViewModel @Inject constructor() : ViewModel() {
     private var timer: Timer? = null
     private var remainingSeconds = 3
 
+    fun getGenreSongList() {
+        updateRemainingTime()
+    }
+
     fun updateRemainingTime() {
         timer = fixedRateTimer(initialDelay = 1000L, period = 1000L) {
             remainingSeconds--
@@ -30,5 +34,6 @@ class GameViewModel @Inject constructor() : ViewModel() {
             }
         }
     }
+
 }
 //TODO flatmapConcat https://medium.com/@myofficework000/7-kotlin-flow-operators-that-you-must-know-62eb726e3ff4 might use that

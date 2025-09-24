@@ -24,6 +24,7 @@ fun NavGraph(
             val args = backStackEntry.toRoute<Route.GameScreen>()
             GameScreen(
                 genreId = args.genreId,
+                genreName = args.genreName,
                 navController = navController
             )
         }
