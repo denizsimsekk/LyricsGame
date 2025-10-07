@@ -26,4 +26,7 @@ interface Api {
         @Path("genreId") genreId: Int,
     ): ResponseDto<List<Track>>
 
+    @GET("track/{id}")
+    suspend fun getTrack(@Path("id") id: Double): Track
+
 }

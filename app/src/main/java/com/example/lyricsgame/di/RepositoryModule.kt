@@ -1,11 +1,12 @@
 package com.example.lyricsgame.di
 
-import android.content.Context
 import com.example.lyricsgame.data.remote.Api
 import com.example.lyricsgame.data.repository.ArtistRepositoryImpl
 import com.example.lyricsgame.data.repository.GenreRepositoryImpl
+import com.example.lyricsgame.data.repository.TrackRepositoryImpl
 import com.example.lyricsgame.domain.repository.IArtistRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
+import com.example.lyricsgame.domain.repository.ITrackRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,7 +15,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-class RepositoryModule {
+object RepositoryModule {
 
     @Provides
     @Singleton
@@ -25,5 +26,10 @@ class RepositoryModule {
     @Singleton
     fun provideArtistRepository(api: Api): IArtistRepository =
         ArtistRepositoryImpl(api = api)
+
+    @Provides
+    @Singleton
+    fun provideTrackRepository(api: Api): ITrackRepository =
+        TrackRepositoryImpl(api = api)
 
 }

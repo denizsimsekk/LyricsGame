@@ -4,7 +4,7 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -32,21 +32,23 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
         viewModel.getGenreSongList(genreId = genreId)
     }
     if (uiState.remainingTimeToStartGame > 0) {
-        CountdownTimer(uiState = uiState)
+        CountdownTimer(uiState = uiState, viewModel = viewModel)
     } else {
         Column(modifier = Modifier.fillMaxSize()) {
             AppTopBar(
                 title = genreName
             ) {
                 navController.popBackStack()
+
             }
+            Button(onClick = { viewModel.play() }) { AppText("play") }
 
         }
     }
 }
 
 @Composable
-fun CountdownTimer(uiState: GameUiState) {
+fun CountdownTimer(uiState: GameUiState, viewModel: GameViewModel) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
