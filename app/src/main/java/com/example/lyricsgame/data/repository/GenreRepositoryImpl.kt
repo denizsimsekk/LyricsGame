@@ -28,6 +28,11 @@ class GenreRepositoryImpl @Inject constructor(
         return flow {
             val response = api.getTopTrackListByGenre(genreId)
             if (response.data.isNullOrEmpty().not()) {
+                response.data?.map { track ->
+                    track.copy(
+                        md5_image = "https://e-cdns-images.dzcdn.net/images/cover/${track.md5_image}/500x500.jpg"
+                    )
+                }
                 response.data?.let { emit(Resource.Success(it)) }
             } else {
                 emit(Resource.Failure("Error Occurred! Please Try Again"))

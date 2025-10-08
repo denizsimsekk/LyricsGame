@@ -4,19 +4,30 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
+import com.example.lyricsgame.data.model.Track
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
+import com.example.lyricsgame.ui.theme.charcoal
 
 @Composable
 fun GameScreen(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
@@ -27,28 +38,29 @@ fun GameScreen(genreId: Int, genreName: String, navController: NavController, vi
 
 @Composable
 private fun MainContent(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel) {
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
         viewModel.getGenreSongList(genreId = genreId)
     }
-    if (uiState.remainingTimeToStartGame > 0) {
-        CountdownTimer(uiState = uiState, viewModel = viewModel)
-    } else {
-        Column(modifier = Modifier.fillMaxSize()) {
-            AppTopBar(
-                title = genreName
-            ) {
-                navController.popBackStack()
 
-            }
-            Button(onClick = { viewModel.play() }) { AppText("play") }
-
+    Column(modifier = Modifier.fillMaxSize()) {
+        AppTopBar(
+            title = genreName
+        ) {
+            navController.popBackStack()
+        }
+        if (uiState.remainingTimeToStartGame > 0) {
+            CountdownTimer(uiState = uiState)
+        } else {
+            uiState.currentTrack?.let { TrackDetailsCard(it) }
         }
     }
 }
 
 @Composable
-fun CountdownTimer(uiState: GameUiState, viewModel: GameViewModel) {
+fun CountdownTimer(uiState: GameUiState) {
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
@@ -62,4 +74,22 @@ fun CountdownTimer(uiState: GameUiState, viewModel: GameViewModel) {
             )
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun TrackDetailsCard(track: Track) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        AsyncImage(
+            model = track.md5_image, contentDescription = null, modifier = Modifier
+                .size(200.dp)
+                .blur(radius = 50.dp)
+        )
+        Slider(state = SliderState(), colors = SliderDefaults.colors(thumbColor = charcoal))
+    }
+
 }

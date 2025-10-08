@@ -1,16 +1,16 @@
 package com.example.lyricsgame.ui.game
 
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
-import com.example.lyricsgame.domain.usecase.track.GetTrackDetailUseCase
 import com.example.lyricsgame.mediaplayer.MediaPlayer
+import com.example.lyricsgame.mediaplayer.MediaPlayerState
 import com.example.lyricsgame.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.withContext
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
@@ -18,7 +18,6 @@ import kotlin.concurrent.fixedRateTimer
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val getTopTrackListByGenreUseCase: GetTopTrackListByGenreUseCase,
-    private val getTrackDetailUseCase: GetTrackDetailUseCase,
     private val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
 
@@ -34,7 +33,6 @@ class GameViewModel @Inject constructor(
             _uiState.update {
                 it.copy(trackList = response)
             }
-
         }.launchIn(viewModelScope)
     }
 
@@ -52,15 +50,18 @@ class GameViewModel @Inject constructor(
     }
 
     fun play() {
-        _uiState.value.trackList?.firstOrNull()?.id?.let {
-            getTrackDetailUseCase.invoke(it).getData { data ->
-                _uiState.update { currentState ->
-                    currentState.copy(url = data?.preview ?: "")
+        _uiState.value.trackList?.get(_uiState.value.currentPosition)?.let {
+            mediaPlayer.setUp(it.preview, onEvent = { playerState ->
+                if (playerState == MediaPlayerState.ENDED) {
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            currentPosition = uiState.value.currentPosition + 1,
+                            currentTrack = uiState.value.trackList?.getOrNull(uiState.value.currentPosition + 1)
+                        )
+                    }
                 }
-            }.launchIn(viewModelScope)
+            })
         }
-        mediaPlayer.setUp(_uiState.value.url)
     }
 
 }
-//TODO flatmapConcat https://medium.com/@myofficework000/7-kotlin-flow-operators-that-you-must-know-62eb726e3ff4 might use that

@@ -13,19 +13,19 @@ class MediaPlayer @Inject constructor(private val context: Context) {
 
     private var listener: Player.Listener? = null
 
-    fun setUp(vararg url: String, playWhenReady: Boolean = true) {
-        initialize(playWhenReady = playWhenReady, onEvent = {}) {
+    fun setUp(vararg url: String, playWhenReady: Boolean = true, onEvent: (MediaPlayerState) -> Unit) {
+        initialize(playWhenReady = playWhenReady, onEvent = { state -> onEvent.invoke(state) }) {
             val mediaItems = url.map { MediaItem.fromUri(it) }
             addMediaItems(mediaItems)
         }
     }
 
-    private fun initialize(playWhenReady: Boolean = true, onEvent: () -> Unit, setUp: ExoPlayer.() -> Unit) {
+    private fun initialize(playWhenReady: Boolean = true, onEvent: (MediaPlayerState) -> Unit, setUp: ExoPlayer.() -> Unit) {
         listener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
                 super.onEvents(player, events)
                 with(player) {
-                    onEvent.invoke()
+                    onEvent.invoke(playbackState.toPlayerState(isPlaying))
                 }
             }
         }

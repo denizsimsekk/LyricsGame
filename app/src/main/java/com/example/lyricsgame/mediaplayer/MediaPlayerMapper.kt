@@ -2,7 +2,7 @@ package com.example.lyricsgame.mediaplayer
 
 import androidx.media3.common.Player
 
-private fun Int.toPlayerState(isPlaying: Boolean): MediaPlayerState {
+fun Int.toPlayerState(isPlaying: Boolean): MediaPlayerState {
     return when (this) {
         Player.STATE_IDLE -> MediaPlayerState.IDLE
         Player.STATE_ENDED -> MediaPlayerState.ENDED
