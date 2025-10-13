@@ -45,6 +45,13 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
         viewModel.getGenreSongList(genreId = genreId)
     }
 
+    LaunchedEffect(uiState.remainingTimeToStartGame) {
+        if(uiState.remainingTimeToStartGame<=0){
+            viewModel.play()
+        }
+
+    }
+
     Column(modifier = Modifier.fillMaxSize()) {
         AppTopBar(
             title = genreName
@@ -54,7 +61,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
         if (uiState.remainingTimeToStartGame > 0) {
             CountdownTimer(uiState = uiState)
         } else {
-            uiState.currentTrack?.let { TrackDetailsCard(it) }
+            uiState.trackList?.getOrNull(uiState.currentPosition)?.let { TrackDetailsCard(uiState,it) }
         }
     }
 }
@@ -78,18 +85,18 @@ fun CountdownTimer(uiState: GameUiState) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TrackDetailsCard(track: Track) {
+private fun TrackDetailsCard(uiState: GameUiState,track: Track) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .fillMaxSize()
+            .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
             model = track.md5_image, contentDescription = null, modifier = Modifier
                 .size(200.dp)
                 .blur(radius = 50.dp)
         )
-        Slider(state = SliderState(), colors = SliderDefaults.colors(thumbColor = charcoal))
+        Slider(state = SliderState(value = uiState.sliderPosition.toFloat(),valueRange = 0F..10F), colors = SliderDefaults.colors(thumbColor = charcoal))
     }
 
 }

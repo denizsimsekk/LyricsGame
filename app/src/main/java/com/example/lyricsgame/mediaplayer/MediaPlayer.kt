@@ -3,6 +3,7 @@ package com.example.lyricsgame.mediaplayer
 import android.content.Context
 import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
+import androidx.media3.common.Player.Listener
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.util.EventLogger
 import javax.inject.Inject
@@ -12,6 +13,10 @@ class MediaPlayer @Inject constructor(private val context: Context) {
     private var mediaPlayer: ExoPlayer? = null
 
     private var listener: Player.Listener? = null
+
+    val currentPosition: Long
+        get() = mediaPlayer?.currentPosition?.coerceAtLeast(0) ?: 0
+
 
     fun setUp(vararg url: String, playWhenReady: Boolean = true, onEvent: (MediaPlayerState) -> Unit) {
         initialize(playWhenReady = playWhenReady, onEvent = { state -> onEvent.invoke(state) }) {
@@ -33,6 +38,7 @@ class MediaPlayer @Inject constructor(private val context: Context) {
             mediaPlayer?.stop()
         }
         mediaPlayer = ExoPlayer.Builder(context).build().apply {
+            addListener(listener as Listener)
             addAnalyticsListener(EventLogger())
             setUp()
             prepare()

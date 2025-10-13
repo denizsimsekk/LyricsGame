@@ -6,11 +6,12 @@ import com.example.lyricsgame.mediaplayer.MediaPlayer
 import com.example.lyricsgame.mediaplayer.MediaPlayerState
 import com.example.lyricsgame.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.launch
 import java.util.Timer
 import javax.inject.Inject
 import kotlin.concurrent.fixedRateTimer
@@ -58,6 +59,20 @@ class GameViewModel @Inject constructor(
                             currentPosition = uiState.value.currentPosition + 1,
                             currentTrack = uiState.value.trackList?.getOrNull(uiState.value.currentPosition + 1)
                         )
+                    }
+                }
+                if (playerState == MediaPlayerState.PLAYING) {
+                    timer = fixedRateTimer(initialDelay = 0L, period = 1000L) {
+                        viewModelScope.launch(Dispatchers.Main) {
+                            _uiState.update { currentState ->
+                                val newPosition = currentState.sliderPosition + 1
+                                currentState.copy(sliderPosition = newPosition)
+                            }
+                        }
+
+                        if (_uiState.value.sliderPosition >= 10) {
+                            this.cancel()
+                        }
                     }
                 }
             })
