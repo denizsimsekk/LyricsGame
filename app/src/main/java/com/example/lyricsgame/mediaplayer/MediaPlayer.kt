@@ -14,13 +14,18 @@ class MediaPlayer @Inject constructor(private val context: Context) {
 
     private var listener: Player.Listener? = null
 
-    val currentPosition: Long
-        get() = mediaPlayer?.currentPosition?.coerceAtLeast(0) ?: 0
-
 
     fun setUp(vararg url: String, playWhenReady: Boolean = true, onEvent: (MediaPlayerState) -> Unit) {
         initialize(playWhenReady = playWhenReady, onEvent = { state -> onEvent.invoke(state) }) {
-            val mediaItems = url.map { MediaItem.fromUri(it) }
+            val mediaItems = url.map { MediaItem.Builder()
+                .setUri(it)
+                .setClippingConfiguration(
+                    MediaItem.ClippingConfiguration.Builder()
+                        .setStartPositionMs(0)
+                        .setEndPositionMs(10000)
+                        .build()
+                )
+                .build() }
             addMediaItems(mediaItems)
         }
     }

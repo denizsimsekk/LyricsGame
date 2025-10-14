@@ -7,10 +7,13 @@ import com.example.lyricsgame.mediaplayer.MediaPlayerState
 import com.example.lyricsgame.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import java.util.Timer
 import javax.inject.Inject
@@ -26,6 +29,8 @@ class GameViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var timer: Timer? = null
+    private var updateJob: Job? = null
+
     private var remainingSeconds = 3
 
     fun getGenreSongList(genreId: Int) {
@@ -62,16 +67,15 @@ class GameViewModel @Inject constructor(
                     }
                 }
                 if (playerState == MediaPlayerState.PLAYING) {
-                    timer = fixedRateTimer(initialDelay = 0L, period = 1000L) {
-                        viewModelScope.launch(Dispatchers.Main) {
-                            _uiState.update { currentState ->
-                                val newPosition = currentState.sliderPosition + 1
-                                currentState.copy(sliderPosition = newPosition)
-                            }
-                        }
+                    updateJob?.cancel()
+                    updateJob = viewModelScope.launch(Dispatchers.Main) {
+                        _uiState.update { currentState -> currentState.copy(sliderPosition = 0) }
 
-                        if (_uiState.value.sliderPosition >= 10) {
-                            this.cancel()
+                        while (isActive && _uiState.value.sliderPosition < 10) {
+                            delay(1000)
+                            _uiState.update { current ->
+                                current.copy(sliderPosition = current.sliderPosition + 1)
+                            }
                         }
                     }
                 }
@@ -79,4 +83,8 @@ class GameViewModel @Inject constructor(
         }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        mediaPlayer.release()
+    }
 }
