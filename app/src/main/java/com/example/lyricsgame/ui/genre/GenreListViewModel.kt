@@ -18,9 +18,9 @@ class GenreListViewModel @Inject constructor(private val getGenreListUseCase: Ge
     val uiState = _uiState.asStateFlow()
 
     fun getGenreList() {
-        getGenreListUseCase.invoke().getData { response->
+        getGenreListUseCase.invoke().getData(onDataReceived = { response ->
             _uiState.update { it.copy(genreList = response ?: listOf()) }
-        }.launchIn(viewModelScope)
+        }).launchIn(viewModelScope)
 
     }
 

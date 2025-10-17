@@ -5,6 +5,9 @@ import com.example.lyricsgame.data.model.Resource
 import com.example.lyricsgame.data.model.Track
 import com.example.lyricsgame.data.remote.Api
 import com.example.lyricsgame.domain.repository.IGenreRepository
+import com.google.firebase.Firebase
+import com.google.firebase.ai.ai
+import com.google.firebase.ai.type.GenerativeBackend
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
@@ -30,7 +33,7 @@ class GenreRepositoryImpl @Inject constructor(
             if (response.data.isNullOrEmpty().not()) {
                 val updatedTracks = response.data?.map { track ->
                     track.copy(
-                        md5_image = "https://e-cdns-images.dzcdn.net/images/cover/${track.md5_image}/500x500.jpg"
+                        md5_image = "https://e-cdns-images.dzcdn.net/images/cover/${track.md5_image}/500x500.jpg",
                     )
                 } ?: listOf()
                 response.data?.let { emit(Resource.Success(updatedTracks)) }

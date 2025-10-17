@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "424098334657",
+    "project_id": "lyricsgame-b7747",
+    "storage_bucket": "lyricsgame-b7747.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:424098334657:android:1723eca603476374481140",
+        "android_client_info": {
+          "package_name": "com.example.lyricsgame"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBJSMiwhniWZXJN6-lA6BoXX-jzk4HMWGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

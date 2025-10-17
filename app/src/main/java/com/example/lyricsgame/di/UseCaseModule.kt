@@ -1,5 +1,6 @@
 package com.example.lyricsgame.di
 
+import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
 import com.example.lyricsgame.domain.repository.ITrackRepository
 import com.example.lyricsgame.domain.usecase.GetGenreListUseCase
@@ -16,7 +17,7 @@ object UseCaseModule {
     fun provideGetGenreListUseCase(genreRepository: IGenreRepository): GetGenreListUseCase =
         GetGenreListUseCase(genreRepository)
 
-    fun provideGetTopTrackListByGenreUseCase(genreRepository: IGenreRepository): GetTopTrackListByGenreUseCase =
+    fun provideGetTopTrackListByGenreUseCase(genreRepository: IGenreRepository, aiRepository: IAIRepository): GetTopTrackListByGenreUseCase =
         GetTopTrackListByGenreUseCase(genreRepository)
 
     fun provideGetTrackDetailUseCase(trackRepository: ITrackRepository): GetTrackDetailUseCase =

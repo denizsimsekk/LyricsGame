@@ -5,6 +5,7 @@ plugins {
     kotlin("plugin.serialization") version "2.0.21"
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -84,5 +85,13 @@ dependencies {
 
     implementation("io.coil-kt:coil:2.6.0")            // for ImageView
     implementation("io.coil-kt:coil-compose:2.6.0")   // for Jetpack Compose
+
+    // Import the BoM for the Firebase platform
+    implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
+
+    implementation("com.google.firebase:firebase-analytics")
+    // Add the dependency for the Firebase AI Logic library When using the BoM,
+    // you don't specify versions in Firebase library dependencies
+    implementation("com.google.firebase:firebase-ai")
 
 }

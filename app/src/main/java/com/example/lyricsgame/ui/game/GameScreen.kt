@@ -4,7 +4,6 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,8 +45,8 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
     }
 
     LaunchedEffect(uiState.remainingTimeToStartGame) {
-        if(uiState.remainingTimeToStartGame<0){
-            viewModel.play()
+        if (uiState.remainingTimeToStartGame < 0) {
+            viewModel.getAiResponse()
         }
 
     }
@@ -61,7 +60,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
         if (uiState.remainingTimeToStartGame > 0) {
             CountdownTimer(uiState = uiState)
         } else {
-            uiState.trackList?.getOrNull(uiState.currentPosition)?.let { TrackDetailsCard(uiState,it) }
+            uiState.questionList?.getOrNull(uiState.currentPosition)?.let { TrackDetailsCard(uiState, it) }
         }
     }
 }
@@ -85,7 +84,7 @@ fun CountdownTimer(uiState: GameUiState) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TrackDetailsCard(uiState: GameUiState,track: Track) {
+private fun TrackDetailsCard(uiState: GameUiState, track: Track) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +95,7 @@ private fun TrackDetailsCard(uiState: GameUiState,track: Track) {
                 .size(200.dp)
                 .blur(radius = 50.dp)
         )
-        Slider(state = SliderState(value = uiState.sliderPosition.toFloat(),valueRange = 0F..10F), colors = SliderDefaults.colors(thumbColor = charcoal))
+        Slider(state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F), colors = SliderDefaults.colors(thumbColor = charcoal))
     }
 
 }
