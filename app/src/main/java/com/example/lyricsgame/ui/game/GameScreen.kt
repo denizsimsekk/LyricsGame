@@ -45,7 +45,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
     }
 
     LaunchedEffect(uiState.remainingTimeToStartGame) {
-        if (uiState.remainingTimeToStartGame < 0) {
+        if (uiState.remainingTimeToStartGame <= 0) {
             viewModel.getAiResponse()
         }
 
