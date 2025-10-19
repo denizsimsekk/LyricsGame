@@ -36,7 +36,7 @@ class GameViewModel @Inject constructor(
         updateRemainingTime()
         getTopTrackListByGenreUseCase.invoke(genreId = genreId).getData(onDataReceived = { response ->
             _uiState.update {
-                it.copy(questionList = response)
+                it.copy(questionList = response, currentTrack = response?.getOrNull(0))
             }
         }).launchIn(viewModelScope)
     }
@@ -53,7 +53,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun getAiResponse() {
-        aiRepository.getAiResponse("Write a fun clue about ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}").getData(onDataReceived = { res ->
+        aiRepository.getAiResponse("top 4 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}. Just answers seperated by ,").getData(onDataReceived = { res ->
             _uiState.update {
                 it.copy(aiResponse = res ?: "")
             }
