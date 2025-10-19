@@ -53,7 +53,7 @@ class GameViewModel @Inject constructor(
     }
 
     fun getAiResponse() {
-        aiRepository.getAiResponse("top 4 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}. Just answers seperated by ,").getData(onDataReceived = { res ->
+        aiRepository.getAiResponse("Top 4 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}. Just answers seperated by ,").getData(onDataReceived = { res ->
             _uiState.update {
                 it.copy(aiResponse = res ?: "")
             }
