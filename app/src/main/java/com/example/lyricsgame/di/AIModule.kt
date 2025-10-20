@@ -4,6 +4,7 @@ import com.google.firebase.Firebase
 import com.google.firebase.ai.GenerativeModel
 import com.google.firebase.ai.ai
 import com.google.firebase.ai.type.GenerativeBackend
+import com.google.firebase.ai.type.content
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -18,6 +19,8 @@ object AiModule {
     @Singleton
     fun provideGenerativeModel(): GenerativeModel {
         return Firebase.ai(backend = GenerativeBackend.googleAI())
-            .generativeModel("gemini-2.5-flash")
+            .generativeModel(modelName = "gemini-2.5-flash",   systemInstruction = content {
+                text("You are a music similarity expert. Respond ONLY with the song titles separated by a comma. Do not use numbering, explanation, or any extra text.")
+            })
     }
 }

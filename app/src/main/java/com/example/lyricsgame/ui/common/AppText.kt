@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.sp
 import com.example.lyricsgame.ui.theme.robotoFamily
@@ -14,7 +15,8 @@ fun AppText(
     text: String, modifier: Modifier = Modifier,
     size: TextUnit = 16.sp,
     color: Color = Color.Black,
-    fontWeight: FontWeight = FontWeight.Normal
+    fontWeight: FontWeight = FontWeight.Normal,
+    textAlign: TextAlign = TextAlign.Start
 ) {
     Text(
         text = text,
@@ -22,6 +24,7 @@ fun AppText(
         fontFamily = robotoFamily,
         fontWeight = fontWeight,
         fontSize = size,
-        color = color
+        color = color,
+        textAlign = textAlign
     )
 }

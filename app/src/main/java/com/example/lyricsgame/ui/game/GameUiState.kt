@@ -1,6 +1,5 @@
 package com.example.lyricsgame.ui.game
 
-import com.example.lyricsgame.data.model.Question
 import com.example.lyricsgame.data.model.Track
 
 data class GameUiState(
@@ -9,5 +8,5 @@ data class GameUiState(
     var currentPosition: Int = 0,
     var currentTrack: Track? = null,
     var sliderPosition: Int = 0,
-    var aiResponse: String = ""
+    var optionList: List<String>? = listOf()
 )

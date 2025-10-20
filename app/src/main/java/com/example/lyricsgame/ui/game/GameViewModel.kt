@@ -1,6 +1,5 @@
 package com.example.lyricsgame.ui.game
 
-import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
@@ -17,7 +16,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -53,9 +51,9 @@ class GameViewModel @Inject constructor(
     }
 
     fun getAiResponse() {
-        aiRepository.getAiResponse("Top 4 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}. Just answers seperated by ,").getData(onDataReceived = { res ->
+        aiRepository.getAiResponse("Top 4 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
             _uiState.update {
-                it.copy(aiResponse = res ?: "")
+                it.copy(optionList = res?.split(","))
             }
             play()
         }).launchIn(viewModelScope)
@@ -68,7 +66,6 @@ class GameViewModel @Inject constructor(
                     updateJob?.cancel()
                     updateJob = viewModelScope.launch(Dispatchers.Main) {
                         _uiState.update { currentState -> currentState.copy(sliderPosition = 0) }
-                        println("aiRes: ${_uiState.value.aiResponse}")
                         while (isActive && _uiState.value.sliderPosition < 10) {
                             delay(1000)
                             _uiState.update { current ->
