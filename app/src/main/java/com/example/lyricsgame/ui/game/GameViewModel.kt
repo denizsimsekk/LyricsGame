@@ -51,21 +51,34 @@ class GameViewModel @Inject constructor(
     }
 
     fun getAiResponse() {
-        aiRepository.getAiResponse("Top 4 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
+        aiRepository.getAiResponse("Top 3 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
+            _uiState.update { state ->
+                val options = res
+                    ?.split(";")
+                    ?.toMutableList()
+                    ?.apply {
+                        state.currentTrack?.title?.let { add(it) }
+                        shuffle()
+                    }
+
+                state.copy(optionList = options)
+            }
+            play()
+        }, onError = {
             _uiState.update {
-                it.copy(optionList = res?.split(","))
+                it.copy(aiError = true, currentPosition = _uiState.value.currentPosition + 1)
             }
             play()
         }).launchIn(viewModelScope)
     }
 
-    fun play() {
+    private fun play() {
         _uiState.value.questionList?.get(_uiState.value.currentPosition)?.let {
             mediaPlayer.setUp(it.preview, onEvent = { playerState ->
                 if (playerState == MediaPlayerState.PLAYING) {
                     updateJob?.cancel()
                     updateJob = viewModelScope.launch(Dispatchers.Main) {
-                        _uiState.update { currentState -> currentState.copy(sliderPosition = 0) }
+                        _uiState.update { currentState -> currentState.copy(sliderPosition = 0, aiError = false) }
                         while (isActive && _uiState.value.sliderPosition < 10) {
                             delay(1000)
                             _uiState.update { current ->

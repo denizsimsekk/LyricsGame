@@ -20,7 +20,7 @@ object AiModule {
     fun provideGenerativeModel(): GenerativeModel {
         return Firebase.ai(backend = GenerativeBackend.googleAI())
             .generativeModel(modelName = "gemini-2.5-flash",   systemInstruction = content {
-                text("You are a music similarity expert. Respond ONLY with the song titles separated by a comma. Do not use numbering, explanation, or any extra text.")
+                text("You are a music similarity expert. Respond ONLY with the song titles separated by a semicolon. Do not use numbering, explanation, artist name or any extra text.")
             })
     }
 }

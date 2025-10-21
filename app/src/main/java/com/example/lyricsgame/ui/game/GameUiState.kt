@@ -8,5 +8,6 @@ data class GameUiState(
     var currentPosition: Int = 0,
     var currentTrack: Track? = null,
     var sliderPosition: Int = 0,
-    var optionList: List<String>? = listOf()
+    var optionList: MutableList<String>? = mutableListOf(),
+    var aiError: Boolean = false
 )

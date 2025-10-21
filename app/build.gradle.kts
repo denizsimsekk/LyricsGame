@@ -85,6 +85,7 @@ dependencies {
 
     implementation("io.coil-kt:coil:2.6.0")            // for ImageView
     implementation("io.coil-kt:coil-compose:2.6.0")   // for Jetpack Compose
+    implementation("io.coil-kt:coil-gif:2.6.0")
 
     // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:34.4.0"))

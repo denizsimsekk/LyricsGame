@@ -1,11 +1,13 @@
 package com.example.lyricsgame.ui.game
 
+import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -27,7 +30,11 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import com.example.lyricsgame.R
 import com.example.lyricsgame.data.model.Track
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
@@ -43,6 +50,7 @@ fun GameScreen(genreId: Int, genreName: String, navController: NavController, vi
 @Composable
 private fun MainContent(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel) {
 
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
@@ -53,10 +61,17 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
         if (uiState.remainingTimeToStartGame <= 0) {
             viewModel.getAiResponse()
         }
-
     }
 
-    Column(modifier = Modifier.fillMaxSize()) {
+    if (uiState.aiError) {
+        Toast.makeText(context, "AI Error Occured🤯Let's continue with next song🚀", Toast.LENGTH_SHORT).show()
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(color = Color.White)
+    ) {
         AppTopBar(
             title = genreName
         ) {
@@ -72,7 +87,24 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                         OptionItem(it)
                     }
                 } else {
-                    AppText("ai loading")
+                    val imageLoader = ImageLoader.Builder(context)
+                        .components {
+                            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                add(ImageDecoderDecoder.Factory())
+                            } else {
+                                add(GifDecoder.Factory())
+                            }
+                        }
+                        .build()
+
+                    AsyncImage(
+                        model = R.drawable.ai_loading,
+                        contentDescription = null,
+                        imageLoader = imageLoader,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(300.dp)
+                    )
                 }
             }
         }

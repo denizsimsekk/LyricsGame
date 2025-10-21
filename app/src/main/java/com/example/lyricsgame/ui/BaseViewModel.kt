@@ -16,7 +16,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
     private val _baseUiState = MutableStateFlow(BaseUiState())
     val baseUiState = _baseUiState.asStateFlow()
 
-    fun <T> Flow<Resource<T>>.getData(onDataReceived: ((T?) -> Unit)): Flow<Resource<T>> {
+    fun <T> Flow<Resource<T>>.getData(onDataReceived: ((T?) -> Unit), onError: (() -> Unit)? = null): Flow<Resource<T>> {
         return this.onEach { response ->
             when (response) {
                 is Resource.Success -> {
@@ -24,6 +24,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
                 }
 
                 is Resource.Failure -> {
+                    onError?.invoke()
                     _baseUiState.update { it.copy(errorMessage = response.errorMessage) }
                 }
             }
