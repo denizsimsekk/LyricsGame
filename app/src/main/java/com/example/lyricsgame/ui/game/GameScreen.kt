@@ -3,6 +3,7 @@ package com.example.lyricsgame.ui.game
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -24,7 +25,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -59,7 +59,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
 
     LaunchedEffect(uiState.remainingTimeToStartGame) {
         if (uiState.remainingTimeToStartGame <= 0) {
-            viewModel.getAiResponse()
+            viewModel.getQuestionOptions()
         }
     }
 
@@ -84,7 +84,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                 uiState.questionList?.getOrNull(uiState.currentPosition)?.let { TrackDetailsCard(uiState, it) }
                 if (uiState.optionList.isNullOrEmpty().not()) {
                     uiState.optionList?.forEach {
-                        OptionItem(it)
+                        OptionItem(option = it, viewModel = viewModel)
                     }
                 } else {
                     val imageLoader = ImageLoader.Builder(context)
@@ -147,9 +147,15 @@ private fun TrackDetailsCard(uiState: GameUiState, track: Track) {
 }
 
 @Composable
-private fun OptionItem(option: String) {
+private fun OptionItem(option: String, viewModel: GameViewModel) {
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable {
+                viewModel.selectOption(option)
+            }, horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         AppText(
             text = option, modifier = Modifier
                 .padding(horizontal = 16.dp, vertical = 4.dp)

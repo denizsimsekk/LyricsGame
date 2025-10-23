@@ -50,7 +50,7 @@ class GameViewModel @Inject constructor(
         }
     }
 
-    fun getAiResponse() {
+    fun getQuestionOptions() {
         aiRepository.getAiResponse("Top 3 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
             _uiState.update { state ->
                 val options = res
@@ -64,16 +64,21 @@ class GameViewModel @Inject constructor(
                 state.copy(optionList = options)
             }
             play()
-        }, onError = {
-            _uiState.update {
-                it.copy(aiError = true, currentPosition = _uiState.value.currentPosition + 1)
+        }, onError = {//TODO launch viewModelScope to prevent from stackoverflow??
+            _uiState.update { currentState ->
+                val nextPosition = currentState.currentPosition + 1
+                currentState.copy(
+                    aiError = true,
+                    currentPosition = nextPosition,
+                    currentTrack = currentState.questionList?.getOrNull(nextPosition)
+                )
             }
-            play()
+            getQuestionOptions()
         }).launchIn(viewModelScope)
     }
 
     private fun play() {
-        _uiState.value.questionList?.get(_uiState.value.currentPosition)?.let {
+        _uiState.value.currentTrack?.let {
             mediaPlayer.setUp(it.preview, onEvent = { playerState ->
                 if (playerState == MediaPlayerState.PLAYING) {
                     updateJob?.cancel()
@@ -89,6 +94,21 @@ class GameViewModel @Inject constructor(
                 }
             })
         }
+    }
+
+    fun selectOption(trackTitle: String) {
+        _uiState.update { currentState ->
+            val nextPosition = currentState.currentPosition + 1
+            currentState.copy(
+                currentPosition = nextPosition,
+                currentTrack = currentState.questionList?.getOrNull(nextPosition),
+                optionList = null,
+                sliderPosition = 0
+            )
+        }
+        updateJob?.cancel()
+        mediaPlayer.stop()
+        getQuestionOptions()
     }
 
     override fun onCleared() {
