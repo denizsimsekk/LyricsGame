@@ -15,13 +15,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.lyricsgame.R
-import com.example.lyricsgame.ui.theme.charcoal
+import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
 fun AppTopBar(modifier: Modifier = Modifier, title: String, onBackButtonClick: () -> Unit) {
     Row(
         modifier = modifier
-            .background(charcoal)
+            .background(colorCharcoal)
             .padding(16.dp)
             .fillMaxWidth()
     ) {

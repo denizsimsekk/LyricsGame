@@ -97,13 +97,23 @@ class GameViewModel @Inject constructor(
     }
 
     fun selectOption(trackTitle: String) {
+        _uiState.update { it.copy(selectedTrackTitle = trackTitle, isTrueAnswerSelected = trackTitle == _uiState.value.currentTrack?.title) }
+        viewModelScope.launch {
+            delay(500)
+            proceedToNextSong()
+        }
+    }
+
+    private fun proceedToNextSong() {
         _uiState.update { currentState ->
             val nextPosition = currentState.currentPosition + 1
             currentState.copy(
                 currentPosition = nextPosition,
                 currentTrack = currentState.questionList?.getOrNull(nextPosition),
                 optionList = null,
-                sliderPosition = 0
+                sliderPosition = 0,
+                isTrueAnswerSelected = null,
+                selectedTrackTitle = null
             )
         }
         updateJob?.cancel()

@@ -2,6 +2,7 @@ package com.example.lyricsgame.ui.game
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -21,7 +22,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -38,7 +41,7 @@ import com.example.lyricsgame.R
 import com.example.lyricsgame.data.model.Track
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
-import com.example.lyricsgame.ui.theme.charcoal
+import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
 fun GameScreen(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
@@ -84,7 +87,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                 uiState.questionList?.getOrNull(uiState.currentPosition)?.let { TrackDetailsCard(uiState, it) }
                 if (uiState.optionList.isNullOrEmpty().not()) {
                     uiState.optionList?.forEach {
-                        OptionItem(option = it, viewModel = viewModel)
+                        OptionItem(option = it, uiState = uiState, viewModel = viewModel)
                     }
                 } else {
                     val imageLoader = ImageLoader.Builder(context)
@@ -141,13 +144,18 @@ private fun TrackDetailsCard(uiState: GameUiState, track: Track) {
                 .size(200.dp)
                 .blur(radius = 50.dp)
         )
-        Slider(state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F), colors = SliderDefaults.colors(thumbColor = charcoal))
+        Slider(state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F), colors = SliderDefaults.colors(thumbColor = colorCharcoal))
     }
 
 }
 
 @Composable
-private fun OptionItem(option: String, viewModel: GameViewModel) {
+private fun OptionItem(option: String, uiState: GameUiState, viewModel: GameViewModel) {
+
+    val animatedAlpha: Float by animateFloatAsState(
+        if ((uiState.isTrueAnswerSelected == true && uiState.selectedTrackTitle == option) || (uiState.isTrueAnswerSelected == false && uiState.selectedTrackTitle == option)) 1.2f else 1f,
+        label = "alpha"
+    )
 
     Column(
         modifier = Modifier
@@ -158,9 +166,10 @@ private fun OptionItem(option: String, viewModel: GameViewModel) {
     ) {
         AppText(
             text = option, modifier = Modifier
-                .padding(horizontal = 16.dp, vertical = 4.dp)
+                .scale(animatedAlpha)
+                .padding(horizontal = 16.dp, vertical = 6.dp)
                 .fillMaxWidth()
-                .background(color = charcoal)
+                .background(color = if (uiState.isTrueAnswerSelected == true && uiState.selectedTrackTitle == option) Color.Green else if (uiState.isTrueAnswerSelected == false && uiState.selectedTrackTitle == option) Color.Red else colorCharcoal)
                 .padding(vertical = 4.dp), textAlign = TextAlign.Center, color = Color.White
         )
     }

@@ -3,7 +3,6 @@ package com.example.lyricsgame.ui.home
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,12 +24,10 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -40,7 +37,7 @@ import com.example.lyricsgame.R
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
-import com.example.lyricsgame.ui.theme.charcoal
+import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
 fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
@@ -100,7 +97,7 @@ private fun GenreListSection(uiState: HomeUiState, navController: NavController,
         Button(
             onClick = {
             }, shape = RectangleShape,
-            colors = ButtonDefaults.buttonColors(containerColor = charcoal),
+            colors = ButtonDefaults.buttonColors(containerColor = colorCharcoal),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
         ) {
             AppText(
