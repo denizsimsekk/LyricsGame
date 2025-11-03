@@ -45,6 +45,8 @@ android {
 
 val nav_version = "2.9.0"
 val retrofit_version = "2.9.0"
+val room_version = "2.8.3"
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -87,12 +89,16 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")   // for Jetpack Compose
     implementation("io.coil-kt:coil-gif:2.6.0")
 
-    // Import the BoM for the Firebase platform
     implementation(platform("com.google.firebase:firebase-bom:34.4.0"))
 
     implementation("com.google.firebase:firebase-analytics")
-    // Add the dependency for the Firebase AI Logic library When using the BoM,
-    // you don't specify versions in Firebase library dependencies
     implementation("com.google.firebase:firebase-ai")
+
+    implementation("androidx.room:room-runtime:$room_version")
+
+
+    ksp("androidx.room:room-compiler:$room_version")
+
+    implementation("androidx.room:room-ktx:$room_version")
 
 }

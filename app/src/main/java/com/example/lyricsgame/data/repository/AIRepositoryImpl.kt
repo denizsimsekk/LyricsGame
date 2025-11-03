@@ -4,7 +4,6 @@ import com.example.lyricsgame.data.model.Resource
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.google.firebase.ai.GenerativeModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 

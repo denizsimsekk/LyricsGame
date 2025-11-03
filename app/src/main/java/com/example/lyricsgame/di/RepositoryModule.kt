@@ -1,13 +1,16 @@
 package com.example.lyricsgame.di
 
+import com.example.lyricsgame.data.local.ScoreDao
 import com.example.lyricsgame.data.remote.Api
 import com.example.lyricsgame.data.repository.AIRepositoryImpl
 import com.example.lyricsgame.data.repository.ArtistRepositoryImpl
 import com.example.lyricsgame.data.repository.GenreRepositoryImpl
+import com.example.lyricsgame.data.repository.ScoreRepositoryImpl
 import com.example.lyricsgame.data.repository.TrackRepositoryImpl
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IArtistRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
+import com.example.lyricsgame.domain.repository.IScoreRepository
 import com.example.lyricsgame.domain.repository.ITrackRepository
 import com.google.firebase.ai.GenerativeModel
 import dagger.Module
@@ -39,5 +42,9 @@ object RepositoryModule {
     @Singleton
     fun provideAIRepository(model: GenerativeModel): IAIRepository =
         AIRepositoryImpl(model)
+
+    @Provides
+    @Singleton
+    fun provideScoreRepository(scoreDao: ScoreDao): IScoreRepository = ScoreRepositoryImpl(scoreDao)
 
 }

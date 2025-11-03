@@ -61,7 +61,7 @@ class GameViewModel @Inject constructor(
                         shuffle()
                     }
 
-                state.copy(optionList = options)
+                state.copy(optionList = options, aiError = false)
             }
             play()
         }, onError = {
@@ -83,7 +83,7 @@ class GameViewModel @Inject constructor(
                 if (playerState == MediaPlayerState.PLAYING) {
                     updateJob?.cancel()
                     updateJob = viewModelScope.launch(Dispatchers.Main) {
-                        _uiState.update { currentState -> currentState.copy(sliderPosition = 0, aiError = false) }
+                        _uiState.update { currentState -> currentState.copy(sliderPosition = 0) }
                         while (isActive && _uiState.value.sliderPosition < 10) {
                             delay(1000)
                             _uiState.update { current ->

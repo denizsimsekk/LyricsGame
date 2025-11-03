@@ -159,7 +159,11 @@ private fun TrackDetailsCard(uiState: GameUiState, track: Track) {
                 .size(200.dp)
                 .blur(radius = 50.dp)
         )
-        Slider(state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F), colors = SliderDefaults.colors(thumbColor = colorCharcoal))
+        Slider(
+            state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F),
+            colors = SliderDefaults.colors(disabledThumbColor = colorCharcoal, disabledInactiveTickColor = colorCharcoal),
+            enabled = false
+        )
     }
 
 }
