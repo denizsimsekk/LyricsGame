@@ -24,9 +24,6 @@ class AIRepositoryImpl @Inject constructor (private val model:GenerativeModel): 
                 println("AI error: ${e.localizedMessage}")
                 emit(Resource.Failure(e.localizedMessage ?: "Unknown AI error"))
             }
-        }.catch { e ->
-            println("Flow error: ${e.localizedMessage}")
-            emit(Resource.Failure(e.localizedMessage ?: "Unknown flow error"))
         }
     }
 

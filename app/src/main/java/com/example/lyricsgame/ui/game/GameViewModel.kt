@@ -64,7 +64,7 @@ class GameViewModel @Inject constructor(
                 state.copy(optionList = options)
             }
             play()
-        }, onError = {//TODO launch viewModelScope to prevent from stackoverflow??
+        }, onError = {
             _uiState.update { currentState ->
                 val nextPosition = currentState.currentPosition + 1
                 currentState.copy(
@@ -73,7 +73,7 @@ class GameViewModel @Inject constructor(
                     currentTrack = currentState.questionList?.getOrNull(nextPosition)
                 )
             }
-            getQuestionOptions()
+            viewModelScope.launch { getQuestionOptions() }
         }).launchIn(viewModelScope)
     }
 
@@ -105,20 +105,24 @@ class GameViewModel @Inject constructor(
     }
 
     private fun proceedToNextSong() {
-        _uiState.update { currentState ->
-            val nextPosition = currentState.currentPosition + 1
-            currentState.copy(
-                currentPosition = nextPosition,
-                currentTrack = currentState.questionList?.getOrNull(nextPosition),
-                optionList = null,
-                sliderPosition = 0,
-                isTrueAnswerSelected = null,
-                selectedTrackTitle = null
-            )
+        if (_uiState.value.questionList?.last() == _uiState.value.currentTrack) {
+            _uiState.update { it.copy(isQuizFinished = true) }
+        } else {
+            _uiState.update { currentState ->
+                val nextPosition = currentState.currentPosition + 1
+                currentState.copy(
+                    currentPosition = nextPosition,
+                    currentTrack = currentState.questionList?.getOrNull(nextPosition),
+                    optionList = null,
+                    sliderPosition = 0,
+                    isTrueAnswerSelected = null,
+                    selectedTrackTitle = null
+                )
+            }
+            getQuestionOptions()
         }
         updateJob?.cancel()
         mediaPlayer.stop()
-        getQuestionOptions()
     }
 
     override fun onCleared() {

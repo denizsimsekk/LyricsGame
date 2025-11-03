@@ -81,38 +81,53 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
             navController.popBackStack()
         }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
-            if (uiState.remainingTimeToStartGame > 0) {
-                CountdownTimer(uiState = uiState)
-            } else {
-                uiState.questionList?.getOrNull(uiState.currentPosition)?.let { TrackDetailsCard(uiState, it) }
-                if (uiState.optionList.isNullOrEmpty().not()) {
-                    uiState.optionList?.forEach {
-                        OptionItem(option = it, uiState = uiState, viewModel = viewModel)
-                    }
-                } else {
-                    val imageLoader = ImageLoader.Builder(context)
-                        .components {
-                            if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                add(ImageDecoderDecoder.Factory())
-                            } else {
-                                add(GifDecoder.Factory())
-                            }
-                        }
-                        .build()
 
-                    AsyncImage(
-                        model = R.drawable.ai_loading,
-                        contentDescription = null,
-                        imageLoader = imageLoader,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp)
-                    )
+            when {
+                uiState.remainingTimeToStartGame > 0 -> {
+                    CountdownTimer(uiState = uiState)
+                }
+
+                uiState.isQuizFinished -> {
+                    // TODO: Score screen
+                    AppText("score")
+                }
+
+                else -> {
+                    val currentTrack = uiState.questionList?.getOrNull(uiState.currentPosition)
+
+                    currentTrack?.let {
+                        TrackDetailsCard(uiState, it)
+                    }
+                    if (uiState.optionList.isNullOrEmpty().not()) {
+                        uiState.optionList!!.forEach { option ->
+                            OptionItem(option = option, uiState = uiState, viewModel = viewModel)
+                        }
+                    } else {
+                        val imageLoader = ImageLoader.Builder(context)
+                            .components {
+                                if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                    add(ImageDecoderDecoder.Factory())
+                                } else {
+                                    add(GifDecoder.Factory())
+                                }
+                            }
+                            .build()
+
+                        AsyncImage(
+                            model = R.drawable.ai_loading,
+                            contentDescription = null,
+                            imageLoader = imageLoader,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(300.dp)
+                        )
+                    }
                 }
             }
         }
     }
 }
+
 
 @Composable
 fun CountdownTimer(uiState: GameUiState) {
