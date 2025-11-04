@@ -7,6 +7,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,7 +25,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -93,34 +93,51 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                 }
 
                 else -> {
-                    val currentTrack = uiState.questionList?.getOrNull(uiState.currentPosition)
-
-                    currentTrack?.let {
-                        TrackDetailsCard(uiState, it)
-                    }
-                    if (uiState.optionList.isNullOrEmpty().not()) {
-                        uiState.optionList!!.forEach { option ->
-                            OptionItem(option = option, uiState = uiState, viewModel = viewModel)
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        AnimatedContent(targetState = uiState.remainingTimeToStartGame.toString(), label = "CountDownTimerText") {
+                            AppText(
+                                text = "$it/${uiState.questionList?.size}",
+                                fontWeight = FontWeight.Bold,
+                                color = if (uiState.isCorrectAnswerSelected == true) Color.Green else Color.Black,
+                                size = 24.sp
+                            )
                         }
-                    } else {
-                        val imageLoader = ImageLoader.Builder(context)
-                            .components {
-                                if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                    add(ImageDecoderDecoder.Factory())
-                                } else {
-                                    add(GifDecoder.Factory())
-                                }
-                            }
-                            .build()
 
-                        AsyncImage(
-                            model = R.drawable.ai_loading,
-                            contentDescription = null,
-                            imageLoader = imageLoader,
+                        Spacer(
                             modifier = Modifier
+                                .height(32.dp)
                                 .fillMaxWidth()
-                                .height(300.dp)
                         )
+
+                        val currentTrack = uiState.questionList?.getOrNull(uiState.currentPosition)
+
+                        currentTrack?.let {
+                            TrackDetailsCard(uiState, it)
+                        }
+                        if (uiState.optionList.isNullOrEmpty().not()) {
+                            uiState.optionList!!.forEach { option ->
+                                OptionItem(option = option, uiState = uiState, viewModel = viewModel)
+                            }
+                        } else {
+                            val imageLoader = ImageLoader.Builder(context)
+                                .components {
+                                    if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                        add(ImageDecoderDecoder.Factory())
+                                    } else {
+                                        add(GifDecoder.Factory())
+                                    }
+                                }
+                                .build()
+
+                            AsyncImage(
+                                model = R.drawable.ai_loading,
+                                contentDescription = null,
+                                imageLoader = imageLoader,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(300.dp)
+                            )
+                        }
                     }
                 }
             }
@@ -172,7 +189,7 @@ private fun TrackDetailsCard(uiState: GameUiState, track: Track) {
 private fun OptionItem(option: String, uiState: GameUiState, viewModel: GameViewModel) {
 
     val animatedAlpha: Float by animateFloatAsState(
-        if ((uiState.isTrueAnswerSelected == true && uiState.selectedTrackTitle == option) || (uiState.isTrueAnswerSelected == false && uiState.selectedTrackTitle == option)) 1.2f else 1f,
+        if ((uiState.isCorrectAnswerSelected == true && uiState.selectedTrackTitle == option) || (uiState.isCorrectAnswerSelected == false && uiState.selectedTrackTitle == option)) 1.2f else 1f,
         label = "alpha"
     )
 
@@ -188,7 +205,7 @@ private fun OptionItem(option: String, uiState: GameUiState, viewModel: GameView
                 .scale(animatedAlpha)
                 .padding(horizontal = 16.dp, vertical = 6.dp)
                 .fillMaxWidth()
-                .background(color = if (uiState.isTrueAnswerSelected == true && uiState.selectedTrackTitle == option) Color.Green else if (uiState.isTrueAnswerSelected == false && uiState.selectedTrackTitle == option) Color.Red else colorCharcoal)
+                .background(color = if (uiState.isCorrectAnswerSelected == true && uiState.selectedTrackTitle == option) Color.Green else if (uiState.isCorrectAnswerSelected == false && uiState.selectedTrackTitle == option) Color.Red else colorCharcoal)
                 .padding(vertical = 4.dp), textAlign = TextAlign.Center, color = Color.White
         )
     }

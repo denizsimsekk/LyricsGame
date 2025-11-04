@@ -11,6 +11,7 @@ data class GameUiState(
     var sliderPosition: Int = 0,
     var optionList: MutableList<String>? = mutableListOf(),
     var aiError: Boolean = false,
-    var isTrueAnswerSelected: Boolean? = null,
-    var isQuizFinished: Boolean = false
+    var isCorrectAnswerSelected: Boolean? = null,
+    var isQuizFinished: Boolean = false,
+    var correctAnswersCount: Int = 0
 )

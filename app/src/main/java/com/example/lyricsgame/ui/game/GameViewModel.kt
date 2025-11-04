@@ -97,7 +97,14 @@ class GameViewModel @Inject constructor(
     }
 
     fun selectOption(trackTitle: String) {
-        _uiState.update { it.copy(selectedTrackTitle = trackTitle, isTrueAnswerSelected = trackTitle == _uiState.value.currentTrack?.title) }
+        _uiState.update { state ->
+            val isCorrect = trackTitle == state.currentTrack?.title
+            state.copy(
+                selectedTrackTitle = trackTitle,
+                isCorrectAnswerSelected = isCorrect,
+                correctAnswersCount = if (isCorrect) state.correctAnswersCount + 1 else state.correctAnswersCount
+            )
+        }
         viewModelScope.launch {
             delay(500)
             proceedToNextSong()
@@ -115,7 +122,7 @@ class GameViewModel @Inject constructor(
                     currentTrack = currentState.questionList?.getOrNull(nextPosition),
                     optionList = null,
                     sliderPosition = 0,
-                    isTrueAnswerSelected = null,
+                    isCorrectAnswerSelected = null,
                     selectedTrackTitle = null
                 )
             }
