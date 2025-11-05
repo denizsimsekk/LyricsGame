@@ -4,8 +4,8 @@ import com.example.lyricsgame.data.local.Score
 
 interface IScoreRepository {
 
-    fun getScore(): Score
+    fun getScore(genreId: Int): Score?
 
-    fun addScore(score: Score)
+    fun addScore(genreId: Int, score: Int)
 
 }

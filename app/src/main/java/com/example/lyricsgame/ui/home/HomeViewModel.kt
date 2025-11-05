@@ -1,7 +1,7 @@
 package com.example.lyricsgame.ui.home
 
 import androidx.lifecycle.viewModelScope
-import com.example.lyricsgame.domain.usecase.GetGenreListUseCase
+import com.example.lyricsgame.domain.usecase.genre.GetGenreListUseCase
 import com.example.lyricsgame.ui.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

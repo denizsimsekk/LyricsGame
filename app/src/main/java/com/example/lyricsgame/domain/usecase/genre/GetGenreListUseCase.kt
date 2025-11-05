@@ -1,4 +1,4 @@
-package com.example.lyricsgame.domain.usecase
+package com.example.lyricsgame.domain.usecase.genre
 
 import com.example.lyricsgame.data.model.Genre
 import com.example.lyricsgame.data.model.Resource

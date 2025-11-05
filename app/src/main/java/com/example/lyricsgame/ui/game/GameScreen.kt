@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -25,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -88,15 +90,48 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                 }
 
                 uiState.isQuizFinished -> {
-                    // TODO: Score screen
-                    AppText("score")
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        AppText(
+                            text = "\uD83D\uDCAB${uiState.correctAnswerCount}/${uiState.questionCount}\uD83D\uDCAB",
+                            fontWeight = FontWeight.Bold,
+                            size = 36.sp
+                        )
+                        val imageLoader = ImageLoader.Builder(context)
+                            .components {
+                                if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                    add(ImageDecoderDecoder.Factory())
+                                } else {
+                                    add(GifDecoder.Factory())
+                                }
+                            }
+                            .build()
+
+                        AsyncImage(
+                            model = R.drawable.score,
+                            contentDescription = null,
+                            imageLoader = imageLoader,
+                            contentScale = ContentScale.FillBounds,
+                            modifier = Modifier
+                                .width(600.dp)
+                                .height(300.dp)
+                        )
+                    }
                 }
 
                 else -> {
                     Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        AnimatedContent(targetState = uiState.remainingTimeToStartGame.toString(), label = "CountDownTimerText") {
+                        if (uiState.lastGameScore != 0) {
                             AppText(
-                                text = "$it/${uiState.questionList?.size}",
+                                text = "Your best score so far⭐${uiState.lastGameScore}⭐",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                size = 12.sp
+                            )
+                            Spacer(modifier = Modifier.fillMaxWidth().height(12.dp))
+                        }
+                        AnimatedContent(targetState = uiState.correctAnswerCount.toString(), label = "CountDownTimerText") {
+                            AppText(
+                                text = "$it/${uiState.questionCount}",
                                 fontWeight = FontWeight.Bold,
                                 color = if (uiState.isCorrectAnswerSelected == true) Color.Green else Color.Black,
                                 size = 24.sp

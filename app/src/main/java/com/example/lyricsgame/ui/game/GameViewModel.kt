@@ -2,6 +2,7 @@ package com.example.lyricsgame.ui.game
 
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.repository.IAIRepository
+import com.example.lyricsgame.domain.repository.IScoreRepository
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
 import com.example.lyricsgame.mediaplayer.MediaPlayer
 import com.example.lyricsgame.mediaplayer.MediaPlayerState
@@ -21,7 +22,8 @@ import javax.inject.Inject
 @HiltViewModel
 class GameViewModel @Inject constructor(
     private val getTopTrackListByGenreUseCase: GetTopTrackListByGenreUseCase,
-    private val aiRepository: IAIRepository,
+    private val aiRepository: IAIRepository,// Direct repository injection - AI generation is an internal game mechanic, not a user-initiated action
+    private val scoreRepository: IScoreRepository,
     private val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
 
@@ -33,8 +35,9 @@ class GameViewModel @Inject constructor(
     fun getGenreSongList(genreId: Int) {
         updateRemainingTime()
         getTopTrackListByGenreUseCase.invoke(genreId = genreId).getData(onDataReceived = { response ->
+            val lastScore = scoreRepository.getScore(genreId)
             _uiState.update {
-                it.copy(questionList = response, currentTrack = response?.getOrNull(0))
+                it.copy(genreId = genreId, questionList = response, currentTrack = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0)
             }
         }).launchIn(viewModelScope)
     }
@@ -70,7 +73,8 @@ class GameViewModel @Inject constructor(
                 currentState.copy(
                     aiError = true,
                     currentPosition = nextPosition,
-                    currentTrack = currentState.questionList?.getOrNull(nextPosition)
+                    currentTrack = currentState.questionList?.getOrNull(nextPosition),
+                    questionCount = currentState.questionCount.minus(1)
                 )
             }
             viewModelScope.launch { getQuestionOptions() }
@@ -102,7 +106,7 @@ class GameViewModel @Inject constructor(
             state.copy(
                 selectedTrackTitle = trackTitle,
                 isCorrectAnswerSelected = isCorrect,
-                correctAnswersCount = if (isCorrect) state.correctAnswersCount + 1 else state.correctAnswersCount
+                correctAnswerCount = if (isCorrect) state.correctAnswerCount + 1 else state.correctAnswerCount
             )
         }
         viewModelScope.launch {
@@ -114,6 +118,7 @@ class GameViewModel @Inject constructor(
     private fun proceedToNextSong() {
         if (_uiState.value.questionList?.last() == _uiState.value.currentTrack) {
             _uiState.update { it.copy(isQuizFinished = true) }
+            scoreRepository.addScore(genreId = _uiState.value.genreId, score = _uiState.value.correctAnswerCount)
         } else {
             _uiState.update { currentState ->
                 val nextPosition = currentState.currentPosition + 1
