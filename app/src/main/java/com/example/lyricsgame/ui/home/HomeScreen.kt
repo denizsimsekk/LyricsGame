@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyRow
@@ -26,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -119,7 +121,31 @@ private fun GenreListSection(uiState: HomeUiState, navController: NavController,
 @Composable
 private fun GlobalChartSection(navController: NavController, modifier: Modifier = Modifier) {
     AppText("Explore Global Chart", fontWeight = FontWeight.Bold, modifier = modifier.padding(16.dp))
-    Image(painter = painterResource(R.drawable.global_chart_banner), contentDescription = null, modifier = modifier.padding(horizontal = 16.dp))
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(150.dp)
+            .padding(horizontal = 16.dp)
+    ) {
+        Image(
+            painter = painterResource(R.drawable.artists_icon), contentDescription = null, modifier = modifier
+                .weight(1f)
+                .padding(end = 2.dp),
+            contentScale = ContentScale.FillBounds
+        )
+        Image(
+            painter = painterResource(R.drawable.albums_icon), contentDescription = null, modifier = modifier
+                .weight(1f)
+                .padding(start = 2.dp, end = 2.dp),
+            contentScale = ContentScale.FillBounds
+        )
+        Image(
+            painter = painterResource(R.drawable.tracks_icon), contentDescription = null, modifier = modifier
+                .weight(1f)
+                .padding(start = 2.dp),
+            contentScale = ContentScale.FillBounds
+        )
+    }
 }
 
 @Composable
