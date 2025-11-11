@@ -46,7 +46,7 @@ import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
-fun GameScreen(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
+fun GuessTrackScreen(genreId: Int, genreName: String, navController: NavController, viewModel: GameViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
         MainContent(genreId = genreId, genreName = genreName, navController = navController, viewModel = viewModel)
     }

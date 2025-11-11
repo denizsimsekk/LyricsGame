@@ -112,7 +112,7 @@ private fun GenreListSection(uiState: HomeUiState, navController: NavController,
     LazyRow(modifier = modifier.padding(horizontal = 16.dp)) {
         items(uiState.genreList) { item ->
             GenreItem(modifier, item) {
-                navController.navigate(Route.GameScreen(item.id, item.name))
+                navController.navigate(Route.GuessTrackScreen(item.id, item.name))
             }
         }
     }
