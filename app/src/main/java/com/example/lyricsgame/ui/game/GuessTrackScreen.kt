@@ -43,6 +43,7 @@ import com.example.lyricsgame.R
 import com.example.lyricsgame.data.model.Track
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
+import com.example.lyricsgame.ui.common.OptionItem
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
@@ -127,7 +128,9 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                                 color = Color.Black,
                                 size = 12.sp
                             )
-                            Spacer(modifier = Modifier.fillMaxWidth().height(12.dp))
+                            Spacer(modifier = Modifier
+                                .fillMaxWidth()
+                                .height(12.dp))
                         }
                         AnimatedContent(targetState = uiState.correctAnswerCount.toString(), label = "CountDownTimerText") {
                             AppText(
@@ -151,7 +154,9 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
                         }
                         if (uiState.optionList.isNullOrEmpty().not()) {
                             uiState.optionList!!.forEach { option ->
-                                OptionItem(option = option, uiState = uiState, viewModel = viewModel)
+                                OptionItem(option = option, isCorrectAnswer = uiState.isCorrectAnswerSelected, selectedOption = uiState.selectedTrackTitle) {
+                                    viewModel.selectOption(option)
+                                }
                             }
                         } else {
                             val imageLoader = ImageLoader.Builder(context)
@@ -215,33 +220,6 @@ private fun TrackDetailsCard(uiState: GameUiState, track: Track) {
             state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F),
             colors = SliderDefaults.colors(disabledThumbColor = colorCharcoal, disabledInactiveTickColor = colorCharcoal),
             enabled = false
-        )
-    }
-
-}
-
-@Composable
-private fun OptionItem(option: String, uiState: GameUiState, viewModel: GameViewModel) {
-
-    val animatedAlpha: Float by animateFloatAsState(
-        if ((uiState.isCorrectAnswerSelected == true && uiState.selectedTrackTitle == option) || (uiState.isCorrectAnswerSelected == false && uiState.selectedTrackTitle == option)) 1.2f else 1f,
-        label = "alpha"
-    )
-
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clickable {
-                viewModel.selectOption(option)
-            }, horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AppText(
-            text = option, modifier = Modifier
-                .scale(animatedAlpha)
-                .padding(horizontal = 16.dp, vertical = 6.dp)
-                .fillMaxWidth()
-                .background(color = if (uiState.isCorrectAnswerSelected == true && uiState.selectedTrackTitle == option) Color.Green else if (uiState.isCorrectAnswerSelected == false && uiState.selectedTrackTitle == option) Color.Red else colorCharcoal)
-                .padding(vertical = 4.dp), textAlign = TextAlign.Center, color = Color.White
         )
     }
 
