@@ -129,6 +129,7 @@ private fun GlobalChartSection(navController: NavController, modifier: Modifier 
     ) {
         Image(
             painter = painterResource(R.drawable.artists_icon), contentDescription = null, modifier = modifier
+                .clickable { navController.navigate(Route.GuessArtistScreen) }
                 .weight(1f)
                 .padding(end = 2.dp),
             contentScale = ContentScale.FillBounds

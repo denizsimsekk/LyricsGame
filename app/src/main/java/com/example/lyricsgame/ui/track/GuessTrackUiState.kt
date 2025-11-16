@@ -1,8 +1,8 @@
-package com.example.lyricsgame.ui.game
+package com.example.lyricsgame.ui.track
 
 import com.example.lyricsgame.data.model.Track
 
-data class GameUiState(
+data class GuessTrackUiState(
     var genreId: Int = 0,
     var remainingTimeToStartGame: Int = 3,
     var questionList: List<Track>? = listOf(),
@@ -15,6 +15,6 @@ data class GameUiState(
     var isCorrectAnswerSelected: Boolean? = null,
     var isQuizFinished: Boolean = false,
     var correctAnswerCount: Int = 0,
-    var questionCount:Int=0,//if ai couldn't generate options for the song it should be count from questionList so should store in another variable
+    var questionCount:Int=0,//If the AI cannot generate options for a song, that question should be skipped and the total question count should decrease. The skipped question count should be stored in a separate variable.
     var lastGameScore: Int = 0
 )

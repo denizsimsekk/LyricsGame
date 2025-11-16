@@ -1,4 +1,4 @@
-package com.example.lyricsgame.ui.game
+package com.example.lyricsgame.ui.track
 
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.repository.IAIRepository
@@ -20,14 +20,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GameViewModel @Inject constructor(
+class GuessTrackViewModel @Inject constructor(
     private val getTopTrackListByGenreUseCase: GetTopTrackListByGenreUseCase,
     private val aiRepository: IAIRepository,// Direct repository injection - AI generation is an internal game mechanic, not a user-initiated action
     private val scoreRepository: IScoreRepository,
     private val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(GameUiState())
+    private val _uiState = MutableStateFlow(GuessTrackUiState())
     val uiState = _uiState.asStateFlow()
 
     private var updateJob: Job? = null

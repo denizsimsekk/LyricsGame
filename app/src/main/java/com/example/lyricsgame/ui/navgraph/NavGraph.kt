@@ -6,7 +6,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import com.example.lyricsgame.ui.SearchScreen
-import com.example.lyricsgame.ui.game.GuessTrackScreen
+import com.example.lyricsgame.ui.artist.GuessArtistScreen
+import com.example.lyricsgame.ui.track.GuessTrackScreen
 import com.example.lyricsgame.ui.genre.GenreListScreen
 import com.example.lyricsgame.ui.home.HomeScreen
 
@@ -28,11 +29,14 @@ fun NavGraph(
                 navController = navController
             )
         }
-        composable<Route.GenreListScreen> { backStackEntry ->
+        composable<Route.GenreListScreen> {
             GenreListScreen(navController = navController)
         }
-        composable<Route.SearchScreen> { backStackEntry ->
+        composable<Route.SearchScreen> {
             SearchScreen(navController = navController)
+        }
+        composable<Route.GuessArtistScreen> {
+            GuessArtistScreen(navController = navController)
         }
     }
 }

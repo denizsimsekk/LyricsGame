@@ -29,16 +29,22 @@ class GenreRepositoryImpl @Inject constructor(
 
     override fun getTopTrackListByGenre(genreId: Int): Flow<Resource<List<Track>>> {
         return flow {
-            val response = api.getTopTrackListByGenre(genreId)
-            if (response.data.isNullOrEmpty().not()) {
-                val updatedTracks = response.data?.map { track ->
-                    track.copy(
-                        md5_image = "https://e-cdns-images.dzcdn.net/images/cover/${track.md5_image}/500x500.jpg",
-                    )
-                } ?: listOf()
-                response.data?.let { emit(Resource.Success(updatedTracks)) }
-            } else {
-                emit(Resource.Failure("Error Occurred! Please Try Again"))
+            try {
+                val response = api.getTopTrackListByGenre(genreId)
+
+                if (!response.data.isNullOrEmpty()) {
+                    val updatedTracks = response.data!!.map { track ->
+                        track.copy(
+                            md5_image = "https://e-cdns-images.dzcdn.net/images/cover/${track.md5_image}/500x500.jpg"
+                        )
+                    }
+                    emit(Resource.Success(updatedTracks))
+                } else {
+                    emit(Resource.Failure("Error Occurred! Please Try Again"))
+                }
+
+            } catch (e: Exception) {
+                emit(Resource.Failure(e.message ?: "Unexpected error occurred"))
             }
         }
     }
