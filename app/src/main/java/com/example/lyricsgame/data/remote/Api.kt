@@ -15,7 +15,7 @@ interface Api {
     suspend fun getGenreList(): ResponseDto<List<Genre>>
 
     @GET("chart")
-    suspend fun getGlobalChart(): ResponseDto<GlobalChart>
+    suspend fun getGlobalChart(): GlobalChart
 
     @GET("genre/{genreId}/artists")
     suspend fun getArtistListByGenre(

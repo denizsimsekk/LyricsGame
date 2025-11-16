@@ -1,19 +1,42 @@
 package com.example.lyricsgame.ui.artist
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import coil.ImageLoader
+import coil.compose.AsyncImage
+import coil.decode.GifDecoder
+import coil.decode.ImageDecoderDecoder
+import com.example.lyricsgame.R
+import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.common.CountdownTimerText
+import com.example.lyricsgame.ui.common.OptionItem
+import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
 fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navController: NavController) {
@@ -22,9 +45,10 @@ fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navCont
 
 @Composable
 private fun MainContent(viewModel: GuessArtistViewModel, navController: NavController) {
+    val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
-        viewModel.updateRemainingTime()
+        viewModel.getArtist()
     }
     Column(
         modifier = Modifier
@@ -42,7 +66,89 @@ private fun MainContent(viewModel: GuessArtistViewModel, navController: NavContr
                 uiState.remainingTimeToStartGame > 0 -> {
                     CountdownTimerText(remainingTime = uiState.remainingTimeToStartGame)
                 }
+
+                else -> {
+                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                        /*if (uiState.lastGameScore != 0) {
+                            AppText(
+                                text = "Your best score so far⭐${uiState.lastGameScore}⭐",
+                                fontWeight = FontWeight.Bold,
+                                color = Color.Black,
+                                size = 12.sp
+                            )
+                            Spacer(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(12.dp)
+                            )
+                        }*/
+                        AnimatedContent(targetState = uiState.correctAnswerCount.toString(), label = "CountDownTimerText") {
+                            AppText(
+                                text = "$it/${uiState.questionCount}",
+                                fontWeight = FontWeight.Bold,
+                                color = if (uiState.isCorrectAnswerSelected == true) Color.Green else Color.Black,
+                                size = 24.sp
+                            )
+                        }
+
+                        Spacer(
+                            modifier = Modifier
+                                .height(32.dp)
+                                .fillMaxWidth()
+                        )
+
+                        val currentArtist = uiState.questionList?.getOrNull(uiState.currentPosition)
+
+                        currentArtist?.let {
+                            ArtistImage(url = it.picture_medium)
+                        }
+
+                        if (uiState.optionList.isNullOrEmpty().not()) {
+                            uiState.optionList!!.forEach { option ->
+                                OptionItem(option = option, isCorrectAnswer = uiState.isCorrectAnswerSelected, selectedOption = uiState.selectedOption) {
+                                    viewModel.selectOption(option)
+                                }
+                            }
+                        } else {
+                            val imageLoader = ImageLoader.Builder(context)
+                                .components {
+                                    if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                        add(ImageDecoderDecoder.Factory())
+                                    } else {
+                                        add(GifDecoder.Factory())
+                                    }
+                                }
+                                .build()
+
+                            AsyncImage(
+                                model = R.drawable.ai_loading,
+                                contentDescription = null,
+                                imageLoader = imageLoader,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(300.dp)
+                            )
+                        }
+                    }
+                }
             }
         }
+    }
+}
+
+@Composable
+private fun ArtistImage(url: String) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
+    ) {
+        AsyncImage(
+            model = url, contentDescription = null, modifier = Modifier
+                .size(200.dp)
+                .blur(radius = 30.dp)
+        )
+
+
     }
 }
