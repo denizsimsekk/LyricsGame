@@ -3,6 +3,7 @@ package com.example.lyricsgame.ui.track
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IScoreRepository
+import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
 import com.example.lyricsgame.mediaplayer.MediaPlayer
 import com.example.lyricsgame.mediaplayer.MediaPlayerState
@@ -22,7 +23,7 @@ import javax.inject.Inject
 @HiltViewModel
 class GuessTrackViewModel @Inject constructor(
     private val getTopTrackListByGenreUseCase: GetTopTrackListByGenreUseCase,
-    private val aiRepository: IAIRepository,// Direct repository injection - AI generation is an internal game mechanic, not a user-initiated action
+    private val getAIResponseUseCase: GetAIResponseUseCase,
     private val scoreRepository: IScoreRepository,
     private val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
@@ -54,7 +55,7 @@ class GuessTrackViewModel @Inject constructor(
     }
 
     fun getQuestionOptions() {
-        aiRepository.getAiResponse("Top 3 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
+        getAIResponseUseCase.invoke("Top 3 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
             _uiState.update { state ->
                 val options = res
                     ?.split(";")

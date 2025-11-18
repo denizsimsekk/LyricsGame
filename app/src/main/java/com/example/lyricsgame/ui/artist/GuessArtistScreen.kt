@@ -36,7 +36,6 @@ import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
-import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
 fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navController: NavController) {
@@ -49,6 +48,11 @@ private fun MainContent(viewModel: GuessArtistViewModel, navController: NavContr
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
         viewModel.getArtist()
+    }
+    LaunchedEffect(uiState.remainingTimeToStartGame) {
+        if (uiState.remainingTimeToStartGame <= 0) {
+            viewModel.getQuestionOptions()
+        }
     }
     Column(
         modifier = Modifier

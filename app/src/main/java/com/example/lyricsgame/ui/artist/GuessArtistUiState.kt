@@ -9,6 +9,8 @@ data class GuessArtistUiState(
     var isCorrectAnswerSelected: Boolean? = null,
     var questionList: List<Artist> = listOf(),
     var currentPosition: Int = 0,
-    var optionList: List<String> = listOf(),
+    var optionList: MutableList<String>? = null,
     var selectedOption: String? = null,
+    var currentArtist: Artist? = null,
+    var aiError: Boolean = false
 )

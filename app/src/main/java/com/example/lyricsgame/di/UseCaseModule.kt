@@ -4,6 +4,7 @@ import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
 import com.example.lyricsgame.domain.repository.IGlobalChartRepository
 import com.example.lyricsgame.domain.repository.ITrackRepository
+import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.genre.GetGenreListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
@@ -37,5 +38,10 @@ object UseCaseModule {
     @Provides
     fun provideGetGlobalChartUseCase(globalChartRepository: IGlobalChartRepository): GetGlobalChartUseCase =
         GetGlobalChartUseCase(globalChartRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetAIResponseUseCase(aiRepository: IAIRepository): GetAIResponseUseCase =
+        GetAIResponseUseCase(aiRepository)
 
 }

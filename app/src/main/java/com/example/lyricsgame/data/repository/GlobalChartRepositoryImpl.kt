@@ -4,10 +4,8 @@ import com.example.lyricsgame.data.model.GlobalChart
 import com.example.lyricsgame.data.model.Resource
 import com.example.lyricsgame.data.remote.Api
 import com.example.lyricsgame.domain.repository.IGlobalChartRepository
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
 import javax.inject.Inject
 
 class GlobalChartRepositoryImpl @Inject constructor(private val api: Api) : IGlobalChartRepository {
