@@ -180,14 +180,12 @@ private fun ArtistImage(url: String) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
+            .padding(start = 16.dp, end = 16.dp, bottom = 12.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
             model = url, contentDescription = null, modifier = Modifier
                 .size(200.dp)
                 .blur(radius = 30.dp)
         )
-
-
     }
 }
