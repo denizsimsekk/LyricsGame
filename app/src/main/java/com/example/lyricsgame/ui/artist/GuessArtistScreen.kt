@@ -139,7 +139,7 @@ private fun MainContent(viewModel: GuessArtistViewModel, navController: NavContr
                         val currentArtist = uiState.questionList?.getOrNull(uiState.currentPosition)
 
                         currentArtist?.let {
-                            ArtistImage(url = it.picture_medium)
+                            ArtistImage(url = it.picture)
                         }
 
                         if (uiState.optionList.isNullOrEmpty().not()) {

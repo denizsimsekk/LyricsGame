@@ -36,7 +36,7 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.lyricsgame.R
-import com.example.lyricsgame.data.model.Track
+import com.example.lyricsgame.domain.viewentity.TrackViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.common.CountdownTimerText
@@ -186,14 +186,14 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun TrackDetailsCard(uiState: GuessTrackUiState, track: Track) {
+private fun TrackDetailsCard(uiState: GuessTrackUiState, track: TrackViewEntity) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
         AsyncImage(
-            model = track.md5_image, contentDescription = null, modifier = Modifier
+            model = track.image, contentDescription = null, modifier = Modifier
                 .size(200.dp)
                 .blur(radius = 50.dp)
         )

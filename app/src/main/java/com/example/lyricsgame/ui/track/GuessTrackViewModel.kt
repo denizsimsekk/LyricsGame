@@ -1,7 +1,6 @@
 package com.example.lyricsgame.ui.track
 
 import androidx.lifecycle.viewModelScope
-import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IScoreRepository
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase

@@ -1,5 +1,7 @@
 package com.example.lyricsgame.data.model
 
+import com.example.lyricsgame.domain.viewentity.GenreViewEntity
+
 data class Genre(
     val id: Int,
     val name: String,
@@ -9,4 +11,8 @@ data class Genre(
     val picture_small: String,
     val picture_xl: String,
     val type: String
-)
+) {
+    fun toViewEntity(): GenreViewEntity {
+        return GenreViewEntity(id = this.id, name = this.name, picture = this.picture)
+    }
+}

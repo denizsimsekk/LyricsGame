@@ -1,13 +1,14 @@
 package com.example.lyricsgame.ui.track
 
-import com.example.lyricsgame.data.model.Track
+import com.example.lyricsgame.domain.viewentity.TrackViewEntity
+
 
 data class GuessTrackUiState(
     var genreId: Int = 0,
     var remainingTimeToStartGame: Int = 3,
-    var questionList: List<Track>? = listOf(),
+    var questionList: List<TrackViewEntity>? = listOf(),
     var currentPosition: Int = 0,
-    var currentTrack: Track? = null,
+    var currentTrack: TrackViewEntity? = null,
     var selectedTrackTitle: String? = null,
     var sliderPosition: Int = 0,
     var optionList: MutableList<String>? = mutableListOf(),

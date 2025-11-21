@@ -2,7 +2,7 @@ package com.example.lyricsgame.ui.artist
 
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
-import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartUseCase
+import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartArtistsUseCase
 import com.example.lyricsgame.domain.usecase.score.GetScoreUseCase
 import com.example.lyricsgame.domain.usecase.score.SaveScoreUseCase
 import com.example.lyricsgame.ui.BaseViewModel
@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class GuessArtistViewModel @Inject constructor(
-    private val getGlobalChartUseCase: GetGlobalChartUseCase,
+    private val getGlobalChartUseCase: GetGlobalChartArtistsUseCase,
     private val getScoreUseCase: GetScoreUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
     private val getAIResponseUseCase: GetAIResponseUseCase
@@ -30,7 +30,7 @@ class GuessArtistViewModel @Inject constructor(
         updateRemainingTime()
         getGlobalChartUseCase.invoke().getData(onDataReceived = { response ->
             val lastScore = getScoreUseCase.invoke(_uiState.value.type)
-            _uiState.update { it.copy(questionList = response?.artists?.data ?: listOf(), questionCount = response?.artists?.data?.size ?: 0, lastGameScore = lastScore?.score ?: 0) }
+            _uiState.update { it.copy(questionList = response ?: listOf(), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0) }
         }).launchIn(viewModelScope)
     }
 

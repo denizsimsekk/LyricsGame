@@ -25,7 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.lyricsgame.data.model.Genre
+import com.example.lyricsgame.domain.viewentity.GenreViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.navgraph.Route
@@ -61,7 +61,7 @@ fun GenreListScreen(
 }
 
 @Composable
-fun GenreItem(genre: Genre, navController: NavController, modifier: Modifier = Modifier) {
+fun GenreItem(genre: GenreViewEntity, navController: NavController, modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .clickable {

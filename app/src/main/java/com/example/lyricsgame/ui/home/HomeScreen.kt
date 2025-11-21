@@ -36,7 +36,7 @@ import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.lyricsgame.R
-import com.example.lyricsgame.data.model.Genre
+import com.example.lyricsgame.domain.viewentity.GenreViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
 import com.example.lyricsgame.ui.theme.colorCharcoal
@@ -161,7 +161,7 @@ private fun SearchYourFavoriteArtistsSection(navController: NavController, modif
 }
 
 @Composable
-private fun GenreItem(modifier: Modifier, genre: Genre, onGenreSelected: () -> Unit) {
+private fun GenreItem(modifier: Modifier, genre: GenreViewEntity, onGenreSelected: () -> Unit) {
     Box(
         modifier = modifier
             .size(150.dp)

@@ -1,5 +1,7 @@
 package com.example.lyricsgame.data.model
 
+import com.example.lyricsgame.domain.viewentity.ArtistViewEntity
+
 data class Artist(
     val id: Int,
     val link: String,
@@ -12,4 +14,9 @@ data class Artist(
     val radio: Boolean,
     val tracklist: String,
     val type: String
-)
+) {
+    fun toViewEntity(): ArtistViewEntity {
+        return ArtistViewEntity(id = this.id, name = this.name, picture = this.picture)
+    }
+
+}

@@ -1,6 +1,6 @@
 package com.example.lyricsgame.ui.artist
 
-import com.example.lyricsgame.data.model.Artist
+import com.example.lyricsgame.domain.viewentity.ArtistViewEntity
 
 data class GuessArtistUiState(
     var type: Int = -1,
@@ -8,11 +8,11 @@ data class GuessArtistUiState(
     var correctAnswerCount: Int = 0,
     var questionCount: Int = 0,
     var isCorrectAnswerSelected: Boolean? = null,
-    var questionList: List<Artist> = listOf(),
+    var questionList: List<ArtistViewEntity> = listOf(),
     var currentPosition: Int = 0,
     var optionList: MutableList<String>? = null,
     var selectedOption: String? = null,
-    var currentArtist: Artist? = null,
+    var currentArtist: ArtistViewEntity? = null,
     var aiError: Boolean = false,
     var isQuizFinished: Boolean = false,
     var lastGameScore: Int = 0
