@@ -36,6 +36,7 @@ import androidx.navigation.NavController
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.example.lyricsgame.R
+import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.GenreViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
@@ -112,7 +113,7 @@ private fun GenreListSection(uiState: HomeUiState, navController: NavController,
     LazyRow(modifier = modifier.padding(horizontal = 16.dp)) {
         items(uiState.genreList) { item ->
             GenreItem(modifier, item) {
-                navController.navigate(Route.GuessTrackScreen(item.id, item.name))
+                navController.navigate(Route.GuessTrackScreen(type = GameType.TRACKS_BY_GENRE, genreId = item.id, genreName = item.name))
             }
         }
     }
@@ -136,12 +137,14 @@ private fun GlobalChartSection(navController: NavController, modifier: Modifier 
         )
         Image(
             painter = painterResource(R.drawable.albums_icon), contentDescription = null, modifier = modifier
+                .clickable { navController.navigate(Route.GuessAlbumScreen) }
                 .weight(1f)
                 .padding(start = 2.dp, end = 2.dp),
             contentScale = ContentScale.FillBounds
         )
         Image(
             painter = painterResource(R.drawable.tracks_icon), contentDescription = null, modifier = modifier
+                .clickable { navController.navigate(Route.GuessTrackScreen(type = GameType.GLOBAL_TRACKS)) }
                 .weight(1f)
                 .padding(start = 2.dp),
             contentScale = ContentScale.FillBounds

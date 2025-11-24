@@ -8,6 +8,7 @@ import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.genre.GetGenreListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartAlbumListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartArtistsUseCase
+import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartTrackListUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTrackDetailUseCase
 import dagger.Module
@@ -44,6 +45,11 @@ object UseCaseModule {
     @Provides
     fun provideGetGlobalChartAlbumListUseCase(globalChartRepository: IGlobalChartRepository): GetGlobalChartAlbumListUseCase =
         GetGlobalChartAlbumListUseCase(globalChartRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetGlobalChartTrackListUseCase(globalChartRepository: IGlobalChartRepository): GetGlobalChartTrackListUseCase =
+        GetGlobalChartTrackListUseCase(globalChartRepository)
 
     @Singleton
     @Provides

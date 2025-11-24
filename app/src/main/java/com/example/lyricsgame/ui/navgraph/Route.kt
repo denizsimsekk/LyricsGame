@@ -1,5 +1,6 @@
 package com.example.lyricsgame.ui.navgraph
 
+import com.example.lyricsgame.domain.viewentity.GameType
 import kotlinx.serialization.Serializable
 
 sealed class Route {
@@ -7,7 +8,7 @@ sealed class Route {
     object HomeScreen : Route()
 
     @Serializable
-    data class GuessTrackScreen(val genreId: Int, val genreName: String) : Route()
+    data class GuessTrackScreen(val type: GameType, val genreId: Int? = null, val genreName: String? = null) : Route()
 
     @Serializable
     object GenreListScreen : Route()
@@ -18,4 +19,6 @@ sealed class Route {
     @Serializable
     object GuessArtistScreen : Route()
 
+    @Serializable
+    object GuessAlbumScreen : Route()
 }

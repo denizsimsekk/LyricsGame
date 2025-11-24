@@ -1,8 +1,9 @@
-package com.example.lyricsgame.ui.artist
+package com.example.lyricsgame.ui.album
 
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
-import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartArtistsUseCase
+import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartAlbumListUseCase
 import com.example.lyricsgame.domain.usecase.score.GetScoreUseCase
 import com.example.lyricsgame.domain.usecase.score.SaveScoreUseCase
 import com.example.lyricsgame.ui.BaseViewModel
@@ -16,19 +17,19 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GuessArtistViewModel @Inject constructor(
-    private val getGlobalChartUseCase: GetGlobalChartArtistsUseCase,
+class GuessAlbumViewModel @Inject constructor(
+    private val getGlobalChartAlbumListUseCase: GetGlobalChartAlbumListUseCase,
     private val getScoreUseCase: GetScoreUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
     private val getAIResponseUseCase: GetAIResponseUseCase
 ) : BaseViewModel() {
 
-    private val _uiState = MutableStateFlow(GuessArtistUiState())
+    private val _uiState = MutableStateFlow(GuessAlbumUiState())
     val uiState = _uiState.asStateFlow()
 
-    fun getArtist() {
+    fun getAlbum() {
         updateRemainingTime()
-        getGlobalChartUseCase.invoke().getData(onDataReceived = { response ->
+        getGlobalChartAlbumListUseCase.invoke().getData(onDataReceived = { response ->
             val lastScore = getScoreUseCase.invoke(type = _uiState.value.type)
             _uiState.update { it.copy(questionList = response ?: listOf(), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0) }
         }).launchIn(viewModelScope)
@@ -47,7 +48,7 @@ class GuessArtistViewModel @Inject constructor(
 
     fun selectOption(option: String) {
         _uiState.update { state ->
-            val isCorrect = option == state.currentArtist?.name
+            val isCorrect = option == state.currentAlbum?.title
             state.copy(
                 selectedOption = option,
                 isCorrectAnswerSelected = isCorrect,
@@ -61,7 +62,7 @@ class GuessArtistViewModel @Inject constructor(
     }
 
     private fun prodceedToNextQuestion() {
-        if (_uiState.value.questionList?.last() == _uiState.value.currentArtist) {
+        if (_uiState.value.questionList.last() == _uiState.value.currentAlbum) {
             _uiState.update { it.copy(isQuizFinished = true) }
             saveScoreUseCase.invoke(type = _uiState.value.type, score = _uiState.value.correctAnswerCount)
         } else {
@@ -69,7 +70,7 @@ class GuessArtistViewModel @Inject constructor(
                 val nextPosition = currentState.currentPosition + 1
                 currentState.copy(
                     currentPosition = nextPosition,
-                    currentArtist = currentState.questionList?.getOrNull(nextPosition),
+                    currentAlbum = currentState.questionList?.getOrNull(nextPosition),
                     optionList = null,
                     isCorrectAnswerSelected = null,
                     selectedOption = null
@@ -80,13 +81,13 @@ class GuessArtistViewModel @Inject constructor(
     }
 
     fun getQuestionOptions() {
-        getAIResponseUseCase.invoke("Top 3 most similar artist name that has similar photo with this ${_uiState.value.currentArtist?.name}.").getData(onDataReceived = { res ->
+        getAIResponseUseCase.invoke("Top 3 most similar album name that has similar cover photo with this ${_uiState.value.currentAlbum?.title}.").getData(onDataReceived = { res ->
             _uiState.update { state ->
                 val options = res
                     ?.split(";")
                     ?.toMutableList()
                     ?.apply {
-                        state.currentArtist?.name?.let { add(it) }
+                        state.currentAlbum?.title?.let { add(it) }
                         shuffle()
                     }
 
@@ -98,7 +99,7 @@ class GuessArtistViewModel @Inject constructor(
                 currentState.copy(
                     aiError = true,
                     currentPosition = nextPosition,
-                    currentArtist = currentState.questionList?.getOrNull(nextPosition),
+                    currentAlbum = currentState.questionList?.getOrNull(nextPosition),
                     questionCount = currentState.questionCount.minus(1)
                 )
             }

@@ -1,4 +1,4 @@
 package com.example.lyricsgame.domain.viewentity
 
 
-data class ScoreViewEntity(val genreId: Int, val category: String?, val score: Int?)
+data class ScoreViewEntity(val type: GameType, val genreId: Int?, val score: Int?)

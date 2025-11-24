@@ -1,4 +1,4 @@
-package com.example.lyricsgame.ui.artist
+package com.example.lyricsgame.ui.album
 
 import android.widget.Toast
 import androidx.compose.animation.AnimatedContent
@@ -9,15 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -39,16 +36,16 @@ import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
 
 @Composable
-fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navController: NavController) {
+fun GuessAlbumScreen(viewModel: GuessAlbumViewModel = hiltViewModel(), navController: NavController) {
     MainContent(viewModel = viewModel, navController = navController)
 }
 
 @Composable
-private fun MainContent(viewModel: GuessArtistViewModel, navController: NavController) {
+private fun MainContent(viewModel: GuessAlbumViewModel, navController: NavController) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
-        viewModel.getArtist()
+        viewModel.getAlbum()
     }
     LaunchedEffect(uiState.remainingTimeToStartGame) {
         if (uiState.remainingTimeToStartGame <= 0) {
@@ -64,7 +61,7 @@ private fun MainContent(viewModel: GuessArtistViewModel, navController: NavContr
             .background(color = Color.White)
     ) {
         AppTopBar(
-            title = "Guess the Artist"
+            title = "Guess the Album"
         ) {
             navController.popBackStack()
         }
@@ -134,10 +131,10 @@ private fun MainContent(viewModel: GuessArtistViewModel, navController: NavContr
                                 .fillMaxWidth()
                         )
 
-                        val currentArtist = uiState.questionList.getOrNull(uiState.currentPosition)
+                        val currentAlbum = uiState.questionList.getOrNull(uiState.currentPosition)
 
-                        currentArtist?.let {
-                            BlurredImage(url = it.picture)
+                        currentAlbum?.let {
+                            BlurredImage(url = it.coverMedium)
                         }
 
                         if (uiState.optionList.isNullOrEmpty().not()) {

@@ -3,7 +3,11 @@ package com.example.lyricsgame.ui.track
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.repository.IScoreRepository
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
+import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartTrackListUseCase
+import com.example.lyricsgame.domain.usecase.score.GetScoreUseCase
+import com.example.lyricsgame.domain.usecase.score.SaveScoreUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
+import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.mediaplayer.MediaPlayer
 import com.example.lyricsgame.mediaplayer.MediaPlayerState
 import com.example.lyricsgame.ui.BaseViewModel
@@ -22,8 +26,10 @@ import javax.inject.Inject
 @HiltViewModel
 class GuessTrackViewModel @Inject constructor(
     private val getTopTrackListByGenreUseCase: GetTopTrackListByGenreUseCase,
+    private val getGlobalChartTrackListUseCase: GetGlobalChartTrackListUseCase,
     private val getAIResponseUseCase: GetAIResponseUseCase,
-    private val scoreRepository: IScoreRepository,
+    private val getScoreUseCase: GetScoreUseCase,
+    private val saveScoreUseCase: SaveScoreUseCase,
     private val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
 
@@ -32,14 +38,23 @@ class GuessTrackViewModel @Inject constructor(
 
     private var updateJob: Job? = null
 
-    fun getGenreSongList(genreId: Int) {
+    fun getGenreSongList(type: GameType, genreId: Int?) {
         updateRemainingTime()
-        getTopTrackListByGenreUseCase.invoke(genreId = genreId).getData(onDataReceived = { response ->
-            val lastScore = scoreRepository.getScore(genreId)
-            _uiState.update {
-                it.copy(genreId = genreId, questionList = response, currentTrack = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0)
-            }
-        }).launchIn(viewModelScope)
+        if (type == GameType.GLOBAL_TRACKS) {
+            getGlobalChartTrackListUseCase.invoke().getData(onDataReceived = { response ->
+                val lastScore = getScoreUseCase.invoke(type = type, genreId = null)
+                _uiState.update {
+                    it.copy(type = type, genreId = genreId, questionList = response, currentTrack = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0)
+                }
+            }).launchIn(viewModelScope)
+        } else {
+            getTopTrackListByGenreUseCase.invoke(genreId = genreId ?: 0).getData(onDataReceived = { response ->
+                val lastScore = getScoreUseCase.invoke(type = type, genreId = genreId ?: 0)
+                _uiState.update {
+                    it.copy(type = type, genreId = genreId, questionList = response, currentTrack = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0)
+                }
+            }).launchIn(viewModelScope)
+        }
     }
 
     private fun updateRemainingTime() {
@@ -118,7 +133,18 @@ class GuessTrackViewModel @Inject constructor(
     private fun proceedToNextSong() {
         if (_uiState.value.questionList?.last() == _uiState.value.currentTrack) {
             _uiState.update { it.copy(isQuizFinished = true) }
-            scoreRepository.addScore(genreId = _uiState.value.genreId, score = _uiState.value.correctAnswerCount)
+
+            val (type, genreId) = if (_uiState.value.type == GameType.GLOBAL_TRACKS) {
+                GameType.GLOBAL_TRACKS to null
+            } else {
+                GameType.TRACKS_BY_GENRE to (_uiState.value.genreId ?: 0)
+            }
+
+            saveScoreUseCase.invoke(
+                type = type,
+                genreId = genreId,
+                score = _uiState.value.correctAnswerCount
+            )
         } else {
             _uiState.update { currentState ->
                 val nextPosition = currentState.currentPosition + 1

@@ -36,6 +36,7 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.lyricsgame.R
+import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.TrackViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
@@ -44,20 +45,20 @@ import com.example.lyricsgame.ui.common.OptionItem
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
-fun GuessTrackScreen(genreId: Int, genreName: String, navController: NavController, viewModel: GuessTrackViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
+fun GuessTrackScreen(type: GameType, genreId: Int?, genreName: String?, navController: NavController, viewModel: GuessTrackViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
     Column(modifier = modifier.fillMaxSize()) {
-        MainContent(genreId = genreId, genreName = genreName, navController = navController, viewModel = viewModel)
+        MainContent(type = type, genreId = genreId, genreName = genreName, navController = navController, viewModel = viewModel)
     }
 }
 
 @Composable
-private fun MainContent(genreId: Int, genreName: String, navController: NavController, viewModel: GuessTrackViewModel) {
+private fun MainContent(type: GameType, genreId: Int?, genreName: String?, navController: NavController, viewModel: GuessTrackViewModel) {
 
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getGenreSongList(genreId = genreId)
+        viewModel.getGenreSongList(type = type, genreId = genreId)
     }
 
     LaunchedEffect(uiState.remainingTimeToStartGame) {
@@ -76,7 +77,7 @@ private fun MainContent(genreId: Int, genreName: String, navController: NavContr
             .background(color = Color.White)
     ) {
         AppTopBar(
-            title = genreName
+            title = genreName ?: "Tracks"
         ) {
             navController.popBackStack()
         }

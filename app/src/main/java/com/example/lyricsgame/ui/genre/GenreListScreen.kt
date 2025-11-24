@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.GenreViewEntity
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
@@ -65,7 +66,7 @@ fun GenreItem(genre: GenreViewEntity, navController: NavController, modifier: Mo
     Row(
         modifier = modifier
             .clickable {
-                navController.navigate(Route.GuessTrackScreen(genreId = genre.id, genreName = genre.name))
+                navController.navigate(Route.GuessTrackScreen(type = GameType.TRACKS_BY_GENRE, genreId = genre.id, genreName = genre.name))
             }
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(4.dp))
