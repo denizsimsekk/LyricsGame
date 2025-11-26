@@ -9,12 +9,10 @@ import kotlinx.coroutines.flow.Flow
 
 interface IGlobalChartRepository {
 
-    suspend fun getGlobalChart(): GlobalChart
+    fun getGlobalChartArtistList(): Flow<Resource<List<ArtistViewEntity>?>>
 
-    fun getGlobalChartArtistList(): Flow<Resource<List<ArtistViewEntity>>>
+    fun getGlobalChartAlbumList(): Flow<Resource<List<AlbumViewEntity>?>>
 
-    fun getGlobalChartAlbumList(): Flow<Resource<List<AlbumViewEntity>>>
-
-    fun getGlobalChartTrackList(): Flow<Resource<List<TrackViewEntity>>>
+    fun getGlobalChartTrackList(): Flow<Resource<List<TrackViewEntity>?>>
 
 }

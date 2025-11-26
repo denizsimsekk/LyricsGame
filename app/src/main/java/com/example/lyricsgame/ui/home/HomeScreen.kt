@@ -155,7 +155,7 @@ private fun GlobalChartSection(navController: NavController, modifier: Modifier 
 @Composable
 private fun SearchYourFavoriteArtistsSection(navController: NavController, modifier: Modifier = Modifier) {
     AppText("List Your Favorite Artists", fontWeight = FontWeight.Bold, modifier = modifier.padding(16.dp))
-    Image(painter = painterResource(R.drawable.search_artists_banner), contentDescription = null, modifier = modifier
+    Image(painter = painterResource(R.drawable.search_artist_banner), contentDescription = null, modifier = modifier
         .fillMaxWidth()
         .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
         .clickable {

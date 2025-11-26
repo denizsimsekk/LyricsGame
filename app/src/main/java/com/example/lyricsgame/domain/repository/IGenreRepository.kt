@@ -9,8 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface IGenreRepository {
 
-    fun getGenreList(): Flow<Resource<List<GenreViewEntity>>>
+    fun getGenreList(): Flow<Resource<List<GenreViewEntity>?>>
 
-    fun getTopTrackListByGenre(genreId: Int): Flow<Resource<List<TrackViewEntity>>>
+    fun getTopTrackListByGenre(genreId: Int): Flow<Resource<List<TrackViewEntity>?>>
 
 }

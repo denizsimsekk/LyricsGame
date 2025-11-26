@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetGlobalChartAlbumListUseCase @Inject constructor(private val getGlobalChartRepository: IGlobalChartRepository) {
 
-    operator fun invoke(): Flow<Resource<List<AlbumViewEntity>>> {
+    operator fun invoke(): Flow<Resource<List<AlbumViewEntity>?>> {
         return getGlobalChartRepository.getGlobalChartAlbumList()
     }
 

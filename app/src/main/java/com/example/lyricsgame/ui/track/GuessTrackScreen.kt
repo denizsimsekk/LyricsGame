@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
@@ -21,7 +20,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -38,21 +36,23 @@ import coil.decode.ImageDecoderDecoder
 import com.example.lyricsgame.R
 import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.TrackViewEntity
+import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.AppTopBar
+import com.example.lyricsgame.ui.common.BlurredImage
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
-fun GuessTrackScreen(type: GameType, genreId: Int?, genreName: String?, navController: NavController, viewModel: GuessTrackViewModel = hiltViewModel(), modifier: Modifier = Modifier) {
-    Column(modifier = modifier.fillMaxSize()) {
-        MainContent(type = type, genreId = genreId, genreName = genreName, navController = navController, viewModel = viewModel)
+fun GuessTrackScreen(type: GameType, genreId: Int?, genreName: String?, navController: NavController, viewModel: GuessTrackViewModel = hiltViewModel()) {
+    BaseScreen(isTopBarShown = true, topBarTitle = genreName, navController = navController) {
+        MainContent(type = type, genreId = genreId, viewModel = viewModel)
     }
 }
 
 @Composable
-private fun MainContent(type: GameType, genreId: Int?, genreName: String?, navController: NavController, viewModel: GuessTrackViewModel) {
+private fun MainContent(type: GameType, genreId: Int?, viewModel: GuessTrackViewModel) {
 
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -74,27 +74,85 @@ private fun MainContent(type: GameType, genreId: Int?, genreName: String?, navCo
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Color.White)
+            .background(color = Color.White), verticalArrangement = Arrangement.Center
     ) {
-        AppTopBar(
-            title = genreName ?: "Tracks"
-        ) {
-            navController.popBackStack()
-        }
-        Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
 
-            when {
-                uiState.remainingTimeToStartGame > 0 -> {
-                    CountdownTimerText(remainingTime = uiState.remainingTimeToStartGame)
+        when {
+            uiState.remainingTimeToStartGame > 0 -> {
+                CountdownTimerText(remainingTime = uiState.remainingTimeToStartGame)
+            }
+
+            uiState.isQuizFinished -> {
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    AppText(
+                        text = "\uD83D\uDCAB${uiState.correctAnswerCount}/${uiState.questionCount}\uD83D\uDCAB",
+                        fontWeight = FontWeight.Bold,
+                        size = 36.sp
+                    )
+                    val imageLoader = ImageLoader.Builder(context)
+                        .components {
+                            if (android.os.Build.VERSION.SDK_INT >= 28) {
+                                add(ImageDecoderDecoder.Factory())
+                            } else {
+                                add(GifDecoder.Factory())
+                            }
+                        }
+                        .build()
+
+                    AsyncImage(
+                        model = R.drawable.score,
+                        contentDescription = null,
+                        imageLoader = imageLoader,
+                        contentScale = ContentScale.FillBounds,
+                        modifier = Modifier
+                            .width(600.dp)
+                            .height(300.dp)
+                    )
                 }
+            }
 
-                uiState.isQuizFinished -> {
-                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+            else -> {
+                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
+                    if (uiState.lastGameScore != 0) {
                         AppText(
-                            text = "\uD83D\uDCAB${uiState.correctAnswerCount}/${uiState.questionCount}\uD83D\uDCAB",
+                            text = "Your best score so far⭐${uiState.lastGameScore}⭐",
                             fontWeight = FontWeight.Bold,
-                            size = 36.sp
+                            color = Color.Black,
+                            size = 12.sp
                         )
+                        Spacer(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(12.dp)
+                        )
+                    }
+                    AnimatedContent(targetState = uiState.correctAnswerCount.toString(), label = "CountDownTimerText") {
+                        AppText(
+                            text = "$it/${uiState.questionCount}",
+                            fontWeight = FontWeight.Bold,
+                            color = if (uiState.isCorrectAnswerSelected == true) Color.Green else Color.Black,
+                            size = 24.sp
+                        )
+                    }
+
+                    Spacer(
+                        modifier = Modifier
+                            .height(32.dp)
+                            .fillMaxWidth()
+                    )
+
+                    val currentTrack = uiState.questionList?.getOrNull(uiState.currentPosition)
+
+                    currentTrack?.let {
+                        TrackDetailsCard(uiState, it)
+                    }
+                    if (uiState.optionList.isNullOrEmpty().not()) {
+                        uiState.optionList!!.forEach { option ->
+                            OptionItem(option = option, isCorrectAnswer = uiState.isCorrectAnswerSelected, selectedOption = uiState.selectedTrackTitle) {
+                                viewModel.selectOption(option)
+                            }
+                        }
+                    } else {
                         val imageLoader = ImageLoader.Builder(context)
                             .components {
                                 if (android.os.Build.VERSION.SDK_INT >= 28) {
@@ -106,82 +164,18 @@ private fun MainContent(type: GameType, genreId: Int?, genreName: String?, navCo
                             .build()
 
                         AsyncImage(
-                            model = R.drawable.score,
+                            model = R.drawable.ai_loading,
                             contentDescription = null,
                             imageLoader = imageLoader,
-                            contentScale = ContentScale.FillBounds,
                             modifier = Modifier
-                                .width(600.dp)
+                                .fillMaxWidth()
                                 .height(300.dp)
                         )
                     }
                 }
-
-                else -> {
-                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        if (uiState.lastGameScore != 0) {
-                            AppText(
-                                text = "Your best score so far⭐${uiState.lastGameScore}⭐",
-                                fontWeight = FontWeight.Bold,
-                                color = Color.Black,
-                                size = 12.sp
-                            )
-                            Spacer(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(12.dp)
-                            )
-                        }
-                        AnimatedContent(targetState = uiState.correctAnswerCount.toString(), label = "CountDownTimerText") {
-                            AppText(
-                                text = "$it/${uiState.questionCount}",
-                                fontWeight = FontWeight.Bold,
-                                color = if (uiState.isCorrectAnswerSelected == true) Color.Green else Color.Black,
-                                size = 24.sp
-                            )
-                        }
-
-                        Spacer(
-                            modifier = Modifier
-                                .height(32.dp)
-                                .fillMaxWidth()
-                        )
-
-                        val currentTrack = uiState.questionList?.getOrNull(uiState.currentPosition)
-
-                        currentTrack?.let {
-                            TrackDetailsCard(uiState, it)
-                        }
-                        if (uiState.optionList.isNullOrEmpty().not()) {
-                            uiState.optionList!!.forEach { option ->
-                                OptionItem(option = option, isCorrectAnswer = uiState.isCorrectAnswerSelected, selectedOption = uiState.selectedTrackTitle) {
-                                    viewModel.selectOption(option)
-                                }
-                            }
-                        } else {
-                            val imageLoader = ImageLoader.Builder(context)
-                                .components {
-                                    if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                        add(ImageDecoderDecoder.Factory())
-                                    } else {
-                                        add(GifDecoder.Factory())
-                                    }
-                                }
-                                .build()
-
-                            AsyncImage(
-                                model = R.drawable.ai_loading,
-                                contentDescription = null,
-                                imageLoader = imageLoader,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(300.dp)
-                            )
-                        }
-                    }
-                }
             }
         }
+
     }
 }
 
@@ -193,11 +187,7 @@ private fun TrackDetailsCard(uiState: GuessTrackUiState, track: TrackViewEntity)
             .fillMaxWidth()
             .padding(horizontal = 16.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center
     ) {
-        AsyncImage(
-            model = track.image, contentDescription = null, modifier = Modifier
-                .size(200.dp)
-                .blur(radius = 50.dp)
-        )
+        BlurredImage(url = track.image, blur = 50)
         Slider(
             state = SliderState(value = uiState.sliderPosition.toFloat(), valueRange = 0F..10F),
             colors = SliderDefaults.colors(disabledThumbColor = colorCharcoal, disabledInactiveTickColor = colorCharcoal),

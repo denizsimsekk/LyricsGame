@@ -1,12 +1,11 @@
 package com.example.lyricsgame.ui.album
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartAlbumListUseCase
 import com.example.lyricsgame.domain.usecase.score.GetScoreUseCase
 import com.example.lyricsgame.domain.usecase.score.SaveScoreUseCase
-import com.example.lyricsgame.ui.BaseViewModel
+import com.example.lyricsgame.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow

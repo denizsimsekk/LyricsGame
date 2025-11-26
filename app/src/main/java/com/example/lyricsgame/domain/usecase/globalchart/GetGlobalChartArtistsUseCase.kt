@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetGlobalChartArtistsUseCase @Inject constructor(private val globalChartRepository: IGlobalChartRepository) {
 
-    operator fun invoke(): Flow<Resource<List<ArtistViewEntity>>> {
+    operator fun invoke(): Flow<Resource<List<ArtistViewEntity>?>> {
         return globalChartRepository.getGlobalChartArtistList()
     }
 

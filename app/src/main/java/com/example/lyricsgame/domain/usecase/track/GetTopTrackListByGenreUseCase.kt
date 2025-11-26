@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetTopTrackListByGenreUseCase @Inject constructor(private val genreRepository: IGenreRepository) {
 
-    operator fun invoke(genreId: Int): Flow<Resource<List<TrackViewEntity>>> {
+    operator fun invoke(genreId: Int): Flow<Resource<List<TrackViewEntity>?>> {
         return genreRepository.getTopTrackListByGenre(genreId = genreId)
     }
 

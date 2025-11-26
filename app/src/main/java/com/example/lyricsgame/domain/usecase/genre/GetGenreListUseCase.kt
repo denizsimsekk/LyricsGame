@@ -9,7 +9,7 @@ import javax.inject.Inject
 
 class GetGenreListUseCase @Inject constructor(private val genreRepository: IGenreRepository) {
 
-    operator fun invoke() : Flow<Resource<List<GenreViewEntity>>>  {
+    operator fun invoke() : Flow<Resource<List<GenreViewEntity>?>>  {
         return genreRepository.getGenreList()
     }
 }

@@ -1,7 +1,6 @@
 package com.example.lyricsgame.ui.track
 
 import androidx.lifecycle.viewModelScope
-import com.example.lyricsgame.domain.repository.IScoreRepository
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartTrackListUseCase
 import com.example.lyricsgame.domain.usecase.score.GetScoreUseCase
@@ -10,7 +9,7 @@ import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
 import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.mediaplayer.MediaPlayer
 import com.example.lyricsgame.mediaplayer.MediaPlayerState
-import com.example.lyricsgame.ui.BaseViewModel
+import com.example.lyricsgame.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job

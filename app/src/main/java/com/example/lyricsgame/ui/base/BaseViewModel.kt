@@ -1,4 +1,4 @@
-package com.example.lyricsgame.ui
+package com.example.lyricsgame.ui.base
 
 import androidx.lifecycle.ViewModel
 import com.example.lyricsgame.data.model.Resource
@@ -24,8 +24,9 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
                 }
 
                 is Resource.Failure -> {
-                    onError?.invoke()
-                    _baseUiState.update { it.copy(errorMessage = response.errorMessage) }
+                    onError?.invoke() ?: _baseUiState.update {
+                        it.copy(errorMessage = response.errorMessage)
+                    }
                 }
             }
         }

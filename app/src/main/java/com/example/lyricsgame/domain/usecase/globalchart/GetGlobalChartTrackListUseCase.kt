@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class GetGlobalChartTrackListUseCase @Inject constructor(private val globalChartRepository: IGlobalChartRepository) {
 
-    operator fun invoke(): Flow<Resource<List<TrackViewEntity>>> {
+    operator fun invoke(): Flow<Resource<List<TrackViewEntity>?>> {
         return globalChartRepository.getGlobalChartTrackList()
     }
 

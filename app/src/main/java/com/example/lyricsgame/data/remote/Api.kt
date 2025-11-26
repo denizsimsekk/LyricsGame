@@ -12,7 +12,7 @@ import retrofit2.http.Path
 interface Api {
 
     @GET("genre")
-    suspend fun getGenreList(): ResponseDto<List<Genre>>
+    suspend fun getGenreList(): ResponseDto<List<Genre>?>
 
     @GET("chart")
     suspend fun getGlobalChart(): GlobalChart
@@ -25,7 +25,7 @@ interface Api {
     @GET("chart/{genreId}/tracks")
     suspend fun getTopTrackListByGenre(
         @Path("genreId") genreId: Int,
-    ): ResponseDto<List<Track>>
+    ): ResponseDto<List<Track>?>
 
     @GET("track/{id}")
     suspend fun getTrack(@Path("id") id: Double): Track

@@ -5,12 +5,12 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
-import com.example.lyricsgame.ui.SearchScreen
 import com.example.lyricsgame.ui.album.GuessAlbumScreen
 import com.example.lyricsgame.ui.artist.GuessArtistScreen
 import com.example.lyricsgame.ui.track.GuessTrackScreen
 import com.example.lyricsgame.ui.genre.GenreListScreen
 import com.example.lyricsgame.ui.home.HomeScreen
+import com.example.lyricsgame.ui.search.SearchScreen
 
 @Composable
 fun NavGraph(
