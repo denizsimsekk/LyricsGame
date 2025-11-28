@@ -38,7 +38,6 @@ import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.TrackViewEntity
 import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
-import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.common.BlurredImage
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem

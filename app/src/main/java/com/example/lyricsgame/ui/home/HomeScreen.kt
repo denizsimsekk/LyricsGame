@@ -38,13 +38,16 @@ import coil.compose.AsyncImage
 import com.example.lyricsgame.R
 import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.GenreViewEntity
+import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.navgraph.Route
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
 fun HomeScreen(navController: NavController, modifier: Modifier = Modifier) {
-    MainContent(modifier = modifier, navController = navController)
+    BaseScreen(isTopBarShown = false) {
+        MainContent(modifier = modifier, navController = navController)
+    }
 }
 
 @Composable

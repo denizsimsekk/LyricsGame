@@ -29,19 +29,21 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.lyricsgame.R
+import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
-import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.common.BlurredImage
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
 
 @Composable
 fun GuessAlbumScreen(viewModel: GuessAlbumViewModel = hiltViewModel(), navController: NavController) {
-    MainContent(viewModel = viewModel, navController = navController)
+    BaseScreen(isTopBarShown = true, topBarTitle = "Albums", navController = navController) {
+        MainContent(viewModel = viewModel)
+    }
 }
 
 @Composable
-private fun MainContent(viewModel: GuessAlbumViewModel, navController: NavController) {
+private fun MainContent(viewModel: GuessAlbumViewModel) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
@@ -60,11 +62,6 @@ private fun MainContent(viewModel: GuessAlbumViewModel, navController: NavContro
             .fillMaxSize()
             .background(color = Color.White)
     ) {
-        AppTopBar(
-            title = "Guess the Album"
-        ) {
-            navController.popBackStack()
-        }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
 
             when {

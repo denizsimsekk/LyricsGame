@@ -27,8 +27,8 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.GenreViewEntity
+import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
-import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.navgraph.Route
 
 @Composable
@@ -42,22 +42,22 @@ fun GenreListScreen(
         viewModel.getGenreList()
     }
 
-    Column(modifier = modifier.fillMaxSize()) {
-        AppTopBar(title = "Genres") {
-            navController.popBackStack()
-        }
-        AppText(
-            "Choose a genre to start playing.",
-            modifier = modifier.padding(start = 16.dp, top = 16.dp),
-            fontWeight = FontWeight.Bold,
-            size = 18.sp
-        )
-        LazyColumn(modifier.fillMaxSize()) {
-            items(uiState.genreList) { genre ->
-                GenreItem(genre = genre, navController = navController)
+    BaseScreen(isTopBarShown = true, topBarTitle = "Genres", navController = navController) {
+        Column(modifier = modifier.fillMaxSize()) {
+            AppText(
+                "Choose a genre to start playing.",
+                modifier = modifier.padding(start = 16.dp, top = 16.dp),
+                fontWeight = FontWeight.Bold,
+                size = 18.sp
+            )
+            LazyColumn(modifier.fillMaxSize()) {
+                items(uiState.genreList) { genre ->
+                    GenreItem(genre = genre, navController = navController)
+                }
             }
         }
     }
+
 
 }
 

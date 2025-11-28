@@ -15,7 +15,7 @@ import androidx.navigation.NavController
 import com.example.lyricsgame.ui.common.AppTopBar
 
 @Composable
-fun BaseScreen(isTopBarShown: Boolean = false, topBarTitle: String? = null, viewModel: BaseViewModel = hiltViewModel(), navController: NavController, content: @Composable () -> Unit) {
+fun BaseScreen(isTopBarShown: Boolean = false, topBarTitle: String? = null, viewModel: BaseViewModel = hiltViewModel(), navController: NavController? = null, content: @Composable () -> Unit) {
 
     val uiState by viewModel.baseUiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
@@ -34,7 +34,7 @@ fun BaseScreen(isTopBarShown: Boolean = false, topBarTitle: String? = null, view
                 AppTopBar(
                     title = topBarTitle ?: ""
                 ) {
-                    navController.popBackStack()
+                    navController?.popBackStack()
                 }
             }
 

@@ -9,15 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -32,19 +29,21 @@ import coil.compose.AsyncImage
 import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import com.example.lyricsgame.R
+import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
-import com.example.lyricsgame.ui.common.AppTopBar
 import com.example.lyricsgame.ui.common.BlurredImage
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
 
 @Composable
 fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navController: NavController) {
-    MainContent(viewModel = viewModel, navController = navController)
+    BaseScreen(isTopBarShown = true, topBarTitle = "Artists", navController = navController) {
+        MainContent(viewModel = viewModel)
+    }
 }
 
 @Composable
-private fun MainContent(viewModel: GuessArtistViewModel, navController: NavController) {
+private fun MainContent(viewModel: GuessArtistViewModel) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     LaunchedEffect(Unit) {
@@ -63,11 +62,6 @@ private fun MainContent(viewModel: GuessArtistViewModel, navController: NavContr
             .fillMaxSize()
             .background(color = Color.White)
     ) {
-        AppTopBar(
-            title = "Guess the Artist"
-        ) {
-            navController.popBackStack()
-        }
         Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center) {
 
             when {

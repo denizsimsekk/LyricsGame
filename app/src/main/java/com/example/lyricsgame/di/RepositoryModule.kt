@@ -7,13 +7,11 @@ import com.example.lyricsgame.data.repository.ArtistRepositoryImpl
 import com.example.lyricsgame.data.repository.GenreRepositoryImpl
 import com.example.lyricsgame.data.repository.GlobalChartRepositoryImpl
 import com.example.lyricsgame.data.repository.ScoreRepositoryImpl
-import com.example.lyricsgame.data.repository.TrackRepositoryImpl
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IArtistRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
 import com.example.lyricsgame.domain.repository.IGlobalChartRepository
 import com.example.lyricsgame.domain.repository.IScoreRepository
-import com.example.lyricsgame.domain.repository.ITrackRepository
 import com.google.firebase.ai.GenerativeModel
 import dagger.Module
 import dagger.Provides
@@ -34,11 +32,6 @@ object RepositoryModule {
     @Singleton
     fun provideArtistRepository(api: Api): IArtistRepository =
         ArtistRepositoryImpl(api = api)
-
-    @Provides
-    @Singleton
-    fun provideTrackRepository(api: Api): ITrackRepository =
-        TrackRepositoryImpl(api = api)
 
     @Provides
     @Singleton
