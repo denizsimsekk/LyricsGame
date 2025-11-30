@@ -3,11 +3,13 @@ package com.example.lyricsgame.di
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
 import com.example.lyricsgame.domain.repository.IGlobalChartRepository
+import com.example.lyricsgame.domain.repository.ISearchRepository
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
 import com.example.lyricsgame.domain.usecase.genre.GetGenreListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartAlbumListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartArtistsUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartTrackListUseCase
+import com.example.lyricsgame.domain.usecase.search.SearchArtistUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
 import dagger.Module
 import dagger.Provides
@@ -48,5 +50,10 @@ object UseCaseModule {
     @Provides
     fun provideGetAIResponseUseCase(aiRepository: IAIRepository): GetAIResponseUseCase =
         GetAIResponseUseCase(aiRepository)
+
+    @Singleton
+    @Provides
+    fun provideSearchUseCase(searchRepository: ISearchRepository): SearchArtistUseCase =
+        SearchArtistUseCase(searchRepository)
 
 }
