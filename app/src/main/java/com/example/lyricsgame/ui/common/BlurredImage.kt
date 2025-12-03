@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 
 @Composable
-fun BlurredImage(url: String, blur: Int = 30) {
+fun BlurredImage(url: String?, blur: Int = 30) {
     Column(
         modifier = Modifier
             .fillMaxWidth()

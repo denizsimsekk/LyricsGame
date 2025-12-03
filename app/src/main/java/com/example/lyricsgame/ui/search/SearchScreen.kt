@@ -2,6 +2,7 @@ package com.example.lyricsgame.ui.search
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,27 +25,28 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.lyricsgame.domain.viewentity.ArtistViewEntity
+import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.ui.base.BaseScreen
 import com.example.lyricsgame.ui.common.AppText
+import com.example.lyricsgame.ui.navgraph.Route
 import com.example.lyricsgame.ui.theme.beige
 import kotlinx.coroutines.delay
 
 @Composable
 fun SearchScreen(navController: NavController, viewModel: SearchScreenViewModel = hiltViewModel()) {
     BaseScreen(isTopBarShown = true, topBarTitle = "Search Your Favourite Artist", navController = navController) {
-        MainContent(viewModel = viewModel)
+        MainContent(viewModel = viewModel, navController = navController)
     }
 }
 
 @Composable
-private fun MainContent(viewModel: SearchScreenViewModel) {
+private fun MainContent(viewModel: SearchScreenViewModel, navController: NavController) {
 
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
@@ -63,7 +65,9 @@ private fun MainContent(viewModel: SearchScreenViewModel) {
         LazyColumn {
             uiState.searchResult?.let {
                 items(it) { item ->
-                    SearchItem(item)
+                    SearchItem(artist = item) {
+                        navController.navigate(Route.GuessTrackScreen(type = GameType.TRACKS_BY_ARTIST, artistId = it))
+                    }
                 }
             }
         }
@@ -112,9 +116,10 @@ fun DebouncedSearchBar(
 }
 
 @Composable
-fun SearchItem(artist: ArtistViewEntity) {
+fun SearchItem(artist: ArtistViewEntity, onArtistSelected: (artistId: Int) -> Unit) {
     Row(
         modifier = Modifier
+            .clickable { onArtistSelected.invoke(artist.id) }
             .fillMaxWidth()
             .padding(horizontal = 4.dp, vertical = 4.dp)
             .border(width = 1.dp, color = Color.Black, shape = RoundedCornerShape(size = 12.dp))

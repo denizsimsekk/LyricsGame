@@ -44,20 +44,20 @@ import com.example.lyricsgame.ui.common.OptionItem
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
-fun GuessTrackScreen(type: GameType, genreId: Int?, genreName: String?, navController: NavController, viewModel: GuessTrackViewModel = hiltViewModel()) {
+fun GuessTrackScreen(type: GameType, genreId: Int?, genreName: String?, artistId: Int? = null, navController: NavController, viewModel: GuessTrackViewModel = hiltViewModel()) {
     BaseScreen(isTopBarShown = true, topBarTitle = genreName, navController = navController) {
-        MainContent(type = type, genreId = genreId, viewModel = viewModel)
+        MainContent(type = type, genreId = genreId, artistId = artistId, viewModel = viewModel)
     }
 }
 
 @Composable
-private fun MainContent(type: GameType, genreId: Int?, viewModel: GuessTrackViewModel) {
+private fun MainContent(type: GameType, genreId: Int?, artistId: Int?=null, viewModel: GuessTrackViewModel) {
 
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getGenreSongList(type = type, genreId = genreId)
+        viewModel.getGenreSongList(type = type, genreId = genreId, artistId = artistId)
     }
 
     LaunchedEffect(uiState.remainingTimeToStartGame) {

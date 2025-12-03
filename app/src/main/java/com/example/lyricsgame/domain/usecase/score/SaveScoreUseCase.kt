@@ -6,8 +6,8 @@ import javax.inject.Inject
 
 class SaveScoreUseCase @Inject constructor(private val scoreRepository: IScoreRepository) {
 
-    operator fun invoke(type: GameType, genreId: Int?=null, score: Int) {
-        scoreRepository.addScore(type = type, genreId = genreId, score = score)
+    operator fun invoke(type: GameType, genreId: Int? = null, score: Int, artistId: Int? = null) {
+        scoreRepository.addScore(type = type, genreId = genreId, score = score, artistId = artistId)
     }
 
 }

@@ -7,8 +7,8 @@ import javax.inject.Inject
 
 class GetScoreUseCase @Inject constructor(private val scoreRepository: IScoreRepository) {
 
-    operator fun invoke(type: GameType, genreId: Int? = null): ScoreViewEntity? {
-        return scoreRepository.getScore(type = type, genreId = genreId)
+    operator fun invoke(type: GameType, genreId: Int? = null, artistId: Int? = null): ScoreViewEntity? {
+        return scoreRepository.getScore(type = type, genreId = genreId, artistId = artistId)
     }
 
 }

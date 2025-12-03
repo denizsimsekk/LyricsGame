@@ -15,8 +15,7 @@ open class BaseRepository {
     ): Flow<Resource<R>> = flow {
         try {
             val apiResponse = apiCall()
-            if (apiResponse.data != null) {
-                emit(Resource.Success(extractData(apiResponse)))
+            if (apiResponse.data != null) {emit(Resource.Success(extractData(apiResponse)))
             } else {
                 emit(Resource.Failure("Error!"))
             }

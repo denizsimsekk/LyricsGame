@@ -1,10 +1,12 @@
 package com.example.lyricsgame.di
 
 import com.example.lyricsgame.domain.repository.IAIRepository
+import com.example.lyricsgame.domain.repository.IArtistRepository
 import com.example.lyricsgame.domain.repository.IGenreRepository
 import com.example.lyricsgame.domain.repository.IGlobalChartRepository
 import com.example.lyricsgame.domain.repository.ISearchRepository
 import com.example.lyricsgame.domain.usecase.ai.GetAIResponseUseCase
+import com.example.lyricsgame.domain.usecase.artist.GetArtistTrackListUseCase
 import com.example.lyricsgame.domain.usecase.genre.GetGenreListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartAlbumListUseCase
 import com.example.lyricsgame.domain.usecase.globalchart.GetGlobalChartArtistsUseCase
@@ -55,5 +57,10 @@ object UseCaseModule {
     @Provides
     fun provideSearchUseCase(searchRepository: ISearchRepository): SearchArtistUseCase =
         SearchArtistUseCase(searchRepository)
+
+    @Singleton
+    @Provides
+    fun provideGetArtistTrackListUseCase(artistRepository: IArtistRepository): GetArtistTrackListUseCase =
+        GetArtistTrackListUseCase(artistRepository)
 
 }

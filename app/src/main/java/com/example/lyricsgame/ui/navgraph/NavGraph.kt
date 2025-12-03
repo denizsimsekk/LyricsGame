@@ -27,6 +27,7 @@ fun NavGraph(
                 type = args.type,
                 genreId = args.genreId,
                 genreName = args.genreName,
+                artistId = args.artistId,
                 navController = navController
             )
         }

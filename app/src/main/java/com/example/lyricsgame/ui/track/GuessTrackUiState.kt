@@ -19,5 +19,6 @@ data class GuessTrackUiState(
     var isQuizFinished: Boolean = false,
     var correctAnswerCount: Int = 0,
     var questionCount: Int = 0,//If the AI cannot generate options for a song, that question should be skipped and the total question count should decrease. The skipped question count should be stored in a separate variable.
-    var lastGameScore: Int = 0
+    var lastGameScore: Int = 0,
+    var artistId: Int? = null
 )
