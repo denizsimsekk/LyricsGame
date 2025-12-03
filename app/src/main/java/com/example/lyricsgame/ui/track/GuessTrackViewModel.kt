@@ -42,37 +42,38 @@ class GuessTrackViewModel @Inject constructor(
 
     fun getGenreSongList(type: GameType, genreId: Int?, artistId: Int? = null) {
         updateRemainingTime()
-        if (type == GameType.GLOBAL_TRACKS) {
-            getGlobalChartTrackListUseCase.invoke().getData(onDataReceived = { response ->
-                val lastScore = getScoreUseCase.invoke(type = type, genreId = null)
-                _uiState.update {
-                    it.copy(type = type, genreId = genreId, questionList = response, currentTrack = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0)
-                }
-            }).launchIn(viewModelScope)
-        } else if (type == GameType.TRACKS_BY_ARTIST) {
-            artistId?.let { id ->
-                val lastScore = getScoreUseCase.invoke(type = type, genreId = null, artistId = id)
-                getArtistTrackListUseCase.invoke(id).getData(onDataReceived = { response ->
-                    _uiState.update {
-                        it.copy(
-                            type = type,
-                            questionList = response,
-                            currentTrack = response?.getOrNull(0),
-                            questionCount = response?.size ?: 0,
-                            artistId = id,
-                            lastGameScore = lastScore?.score ?: 0
-                        )
-                    }
-                }).launchIn(viewModelScope)
-            }
-        } else {
-            getTopTrackListByGenreUseCase.invoke(genreId = genreId ?: 0).getData(onDataReceived = { response ->
-                val lastScore = getScoreUseCase.invoke(type = type, genreId = genreId ?: 0)
-                _uiState.update {
-                    it.copy(type = type, genreId = genreId, questionList = response, currentTrack = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0)
-                }
-            }).launchIn(viewModelScope)
+        val score = when (type) {
+            GameType.GLOBAL_TRACKS -> getScoreUseCase.invoke(type, null)
+            GameType.TRACKS_BY_ARTIST -> getScoreUseCase.invoke(type, null, artistId)
+            else -> getScoreUseCase.invoke(type, genreId ?: 0)
         }
+
+        val flow = when (type) {
+            GameType.GLOBAL_TRACKS ->
+                getGlobalChartTrackListUseCase.invoke()
+
+            GameType.TRACKS_BY_ARTIST ->
+                artistId?.let { getArtistTrackListUseCase.invoke(it) }
+
+            else ->
+                getTopTrackListByGenreUseCase.invoke(genreId ?: 0)
+        } ?: return
+
+        flow.getData(onDataReceived = { response ->
+            val list = response ?: emptyList()
+
+            _uiState.update {
+                it.copy(
+                    type = type,
+                    genreId = genreId,
+                    artistId = artistId,
+                    questionList = list,
+                    currentTrack = list.getOrNull(0),
+                    questionCount = list.size,
+                    lastGameScore = score?.score ?: 0
+                )
+            }
+        }).launchIn(viewModelScope)
     }
 
     private fun updateRemainingTime() {

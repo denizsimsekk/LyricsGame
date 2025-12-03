@@ -25,7 +25,7 @@ interface Api {
     @GET("search/artist")
     suspend fun searchArtist(@Query("q") query: String): ResponseDto<List<Artist>?>
 
-    @GET("artist/{artistId}/top?limit=50")
+    @GET("artist/{artistId}/top?limit=20")
     suspend fun getArtistTrackList(@Path("artistId") artistId: Int): ResponseDto<List<Track>?>
 
 }

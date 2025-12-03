@@ -15,17 +15,14 @@ open class BaseRepository {
     ): Flow<Resource<R>> = flow {
         try {
             val apiResponse = apiCall()
-            if (apiResponse.data != null) {emit(Resource.Success(extractData(apiResponse)))
+            if (apiResponse.data != null) {
+                emit(Resource.Success(extractData(apiResponse)))
             } else {
                 emit(Resource.Failure("Error!"))
             }
         } catch (e: Exception) {
-            emit(Resource.Failure(parseError(e)))
+            emit(Resource.Failure(e.localizedMessage))
         }
     }.flowOn(Dispatchers.IO)
-
-    fun parseError(e: Exception): String {
-        return ""
-    }
 
 }
