@@ -12,7 +12,7 @@ interface ScoreDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(score: Score)
 
-    @Query("SELECT * FROM score WHERE type = :type AND (genreId IS NULL AND :genreId IS NULL) OR (genreId = :genreId  OR (:artistId IS NOT NULL AND artistId = :artistId))")
+    @Query("SELECT * FROM score  WHERE type = :type AND (:genreId IS NULL OR genreId = :genreId) AND (:artistId IS NULL OR artistId = :artistId)")
     fun getScore(type: GameType, genreId: Int?,artistId:Int?): Score?
 
 }

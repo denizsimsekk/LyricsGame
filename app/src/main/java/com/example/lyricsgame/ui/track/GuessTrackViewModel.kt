@@ -21,7 +21,6 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -48,7 +47,7 @@ class GuessTrackViewModel @Inject constructor(
             else -> getScoreUseCase.invoke(type, genreId ?: 0)
         }
 
-        val flow = when (type) {
+        val source = when (type) {
             GameType.GLOBAL_TRACKS ->
                 getGlobalChartTrackListUseCase.invoke()
 
@@ -59,7 +58,7 @@ class GuessTrackViewModel @Inject constructor(
                 getTopTrackListByGenreUseCase.invoke(genreId ?: 0)
         } ?: return
 
-        flow.getData(onDataReceived = { response ->
+        source.getData(onDataReceived = { response ->
             val list = response ?: emptyList()
 
             _uiState.update {
@@ -73,6 +72,7 @@ class GuessTrackViewModel @Inject constructor(
                     lastGameScore = score?.score ?: 0
                 )
             }
+            getQuestionOptions()
         }).launchIn(viewModelScope)
     }
 
@@ -87,7 +87,7 @@ class GuessTrackViewModel @Inject constructor(
         }
     }
 
-    fun getQuestionOptions() {
+    private fun getQuestionOptions() {
         getAIResponseUseCase.invoke("Top 3 most similar songs to ${_uiState.value.currentTrack?.title} by ${_uiState.value.currentTrack?.artist?.name}.").getData(onDataReceived = { res ->
             _uiState.update { state ->
                 val options = res
@@ -152,19 +152,14 @@ class GuessTrackViewModel @Inject constructor(
     private fun proceedToNextSong() {
         if (_uiState.value.questionList?.last() == _uiState.value.currentTrack) {
             _uiState.update { it.copy(isQuizFinished = true) }
-
-            val (type, genreId) = if (_uiState.value.type == GameType.GLOBAL_TRACKS) {
-                GameType.GLOBAL_TRACKS to null
-            } else {
-                GameType.TRACKS_BY_GENRE to (_uiState.value.genreId ?: 0)
+            _uiState.value.type?.let {
+                saveScoreUseCase.invoke(
+                    type = it,
+                    genreId = _uiState.value.genreId,
+                    score = _uiState.value.correctAnswerCount,
+                    artistId = _uiState.value.artistId
+                )
             }
-
-            saveScoreUseCase.invoke(
-                type = type,
-                genreId = genreId,
-                score = _uiState.value.correctAnswerCount,
-                artistId = _uiState.value.artistId
-            )
         } else {
             _uiState.update { currentState ->
                 val nextPosition = currentState.currentPosition + 1

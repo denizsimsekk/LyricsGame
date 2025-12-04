@@ -101,16 +101,14 @@ private fun GenreListSection(uiState: HomeUiState, navController: NavController,
         AppText("Explore Music Genres", fontWeight = FontWeight.Bold)
 
         Button(
-            onClick = {
-            }, shape = RectangleShape,
+            onClick = { navController.navigate(Route.GenreListScreen) }, shape = RectangleShape,
             colors = ButtonDefaults.buttonColors(containerColor = colorCharcoal),
             contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp)
         ) {
             AppText(
                 text = "Discover More",
-                color = Color.White,
-                modifier = modifier.clickable { navController.navigate(Route.GenreListScreen) })
-
+                color = Color.White
+            )
         }
     }
     LazyRow(modifier = modifier.padding(horizontal = 16.dp)) {

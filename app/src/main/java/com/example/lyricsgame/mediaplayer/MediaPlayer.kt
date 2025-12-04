@@ -51,16 +51,8 @@ class MediaPlayer @Inject constructor(private val context: Context) {
         }
     }
 
-    fun resume() {
-        mediaPlayer?.play()
-    }
-
     fun stop() {
         mediaPlayer?.stop()
-    }
-
-    fun pause() {
-        mediaPlayer?.pause()
     }
 
     fun release() {

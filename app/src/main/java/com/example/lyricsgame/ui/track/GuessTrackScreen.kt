@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -21,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -29,18 +27,15 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import com.example.lyricsgame.R
 import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.domain.viewentity.TrackViewEntity
 import com.example.lyricsgame.ui.base.BaseScreen
+import com.example.lyricsgame.ui.common.AILoadingPlaceholder
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.BlurredImage
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
+import com.example.lyricsgame.ui.common.ScoreSection
 import com.example.lyricsgame.ui.theme.colorCharcoal
 
 @Composable
@@ -51,7 +46,7 @@ fun GuessTrackScreen(type: GameType, genreId: Int?, genreName: String?, artistId
 }
 
 @Composable
-private fun MainContent(type: GameType, genreId: Int?, artistId: Int?=null, viewModel: GuessTrackViewModel) {
+private fun MainContent(type: GameType, genreId: Int?, artistId: Int? = null, viewModel: GuessTrackViewModel) {
 
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -60,14 +55,8 @@ private fun MainContent(type: GameType, genreId: Int?, artistId: Int?=null, view
         viewModel.getGenreSongList(type = type, genreId = genreId, artistId = artistId)
     }
 
-    LaunchedEffect(uiState.remainingTimeToStartGame) {
-        if (uiState.remainingTimeToStartGame <= 0) {
-            viewModel.getQuestionOptions()
-        }
-    }
-
     if (uiState.aiError) {
-        Toast.makeText(context, "AI Error Occured🤯Let's continue with next song🚀", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "AI Error Occurred🤯Let's continue with next song🚀", Toast.LENGTH_SHORT).show()
     }
 
     Column(
@@ -82,32 +71,7 @@ private fun MainContent(type: GameType, genreId: Int?, artistId: Int?=null, view
             }
 
             uiState.isQuizFinished -> {
-                Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                    AppText(
-                        text = "\uD83D\uDCAB${uiState.correctAnswerCount}/${uiState.questionCount}\uD83D\uDCAB",
-                        fontWeight = FontWeight.Bold,
-                        size = 36.sp
-                    )
-                    val imageLoader = ImageLoader.Builder(context)
-                        .components {
-                            if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                add(ImageDecoderDecoder.Factory())
-                            } else {
-                                add(GifDecoder.Factory())
-                            }
-                        }
-                        .build()
-
-                    AsyncImage(
-                        model = R.drawable.score,
-                        contentDescription = null,
-                        imageLoader = imageLoader,
-                        contentScale = ContentScale.FillBounds,
-                        modifier = Modifier
-                            .width(600.dp)
-                            .height(300.dp)
-                    )
-                }
+                ScoreSection(correctAnswerCount = uiState.correctAnswerCount, questionCount = uiState.questionCount)
             }
 
             else -> {
@@ -140,36 +104,25 @@ private fun MainContent(type: GameType, genreId: Int?, artistId: Int?=null, view
                             .fillMaxWidth()
                     )
 
-                    val currentTrack = uiState.questionList?.getOrNull(uiState.currentPosition)
-
-                    currentTrack?.let {
+                    uiState.currentTrack?.let {
                         TrackDetailsCard(uiState, it)
                     }
-                    if (uiState.optionList.isNullOrEmpty().not()) {
-                        uiState.optionList!!.forEach { option ->
-                            OptionItem(option = option, isCorrectAnswer = uiState.isCorrectAnswerSelected, selectedOption = uiState.selectedTrackTitle) {
-                                viewModel.selectOption(option)
-                            }
-                        }
-                    } else {
-                        val imageLoader = ImageLoader.Builder(context)
-                            .components {
-                                if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                    add(ImageDecoderDecoder.Factory())
-                                } else {
-                                    add(GifDecoder.Factory())
-                                }
-                            }
-                            .build()
 
-                        AsyncImage(
-                            model = R.drawable.ai_loading,
-                            contentDescription = null,
-                            imageLoader = imageLoader,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(300.dp)
-                        )
+                    val options = uiState.optionList
+
+                    if (options.isNullOrEmpty()) {
+                        AILoadingPlaceholder()
+                        return
+                    }
+
+                    options.forEach { option ->
+                        OptionItem(
+                            option = option,
+                            isCorrectAnswer = uiState.isCorrectAnswerSelected,
+                            selectedOption = uiState.selectedTrackTitle
+                        ) {
+                            viewModel.selectOption(option)
+                        }
                     }
                 }
             }

@@ -31,8 +31,4 @@ class SearchScreenViewModel @Inject constructor(private val searchArtistUseCase:
         }
     }
 
-    fun onActiveChanged(isActive: Boolean) {
-        _uiState.update { it.copy(isActive = isActive) }
-    }
-
 }

@@ -9,14 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -24,16 +22,13 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import coil.ImageLoader
-import coil.compose.AsyncImage
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import com.example.lyricsgame.R
 import com.example.lyricsgame.ui.base.BaseScreen
+import com.example.lyricsgame.ui.common.AILoadingPlaceholder
 import com.example.lyricsgame.ui.common.AppText
 import com.example.lyricsgame.ui.common.BlurredImage
 import com.example.lyricsgame.ui.common.CountdownTimerText
 import com.example.lyricsgame.ui.common.OptionItem
+import com.example.lyricsgame.ui.common.ScoreSection
 
 @Composable
 fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navController: NavController) {
@@ -46,17 +41,15 @@ fun GuessArtistScreen(viewModel: GuessArtistViewModel = hiltViewModel(), navCont
 private fun MainContent(viewModel: GuessArtistViewModel) {
     val context = LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
     LaunchedEffect(Unit) {
         viewModel.getArtist()
     }
-    LaunchedEffect(uiState.remainingTimeToStartGame) {
-        if (uiState.remainingTimeToStartGame <= 0) {
-            viewModel.getQuestionOptions()
-        }
-    }
+
     if (uiState.aiError) {
-        Toast.makeText(context, "AI Error Occured🤯Let's continue with next song🚀", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "AI Error Occurred🤯Let's continue with next song🚀", Toast.LENGTH_SHORT).show()
     }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -70,32 +63,7 @@ private fun MainContent(viewModel: GuessArtistViewModel) {
                 }
 
                 uiState.isQuizFinished -> {
-                    Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
-                        AppText(
-                            text = "\uD83D\uDCAB${uiState.correctAnswerCount}/${uiState.questionCount}\uD83D\uDCAB",
-                            fontWeight = FontWeight.Bold,
-                            size = 36.sp
-                        )
-                        val imageLoader = ImageLoader.Builder(context)
-                            .components {
-                                if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                    add(ImageDecoderDecoder.Factory())
-                                } else {
-                                    add(GifDecoder.Factory())
-                                }
-                            }
-                            .build()
-
-                        AsyncImage(
-                            model = R.drawable.score,
-                            contentDescription = null,
-                            imageLoader = imageLoader,
-                            contentScale = ContentScale.FillBounds,
-                            modifier = Modifier
-                                .width(600.dp)
-                                .height(300.dp)
-                        )
-                    }
+                    ScoreSection(correctAnswerCount = uiState.correctAnswerCount, questionCount = uiState.questionCount)
                 }
 
                 else -> {
@@ -128,37 +96,25 @@ private fun MainContent(viewModel: GuessArtistViewModel) {
                                 .fillMaxWidth()
                         )
 
-                        val currentArtist = uiState.questionList.getOrNull(uiState.currentPosition)
-
-                        currentArtist?.let {
+                        uiState.currentArtist?.let {
                             BlurredImage(url = it.picture)
                         }
 
-                        if (uiState.optionList.isNullOrEmpty().not()) {
-                            uiState.optionList!!.forEach { option ->
-                                OptionItem(option = option, isCorrectAnswer = uiState.isCorrectAnswerSelected, selectedOption = uiState.selectedOption) {
-                                    viewModel.selectOption(option)
-                                }
-                            }
-                        } else {
-                            val imageLoader = ImageLoader.Builder(context)
-                                .components {
-                                    if (android.os.Build.VERSION.SDK_INT >= 28) {
-                                        add(ImageDecoderDecoder.Factory())
-                                    } else {
-                                        add(GifDecoder.Factory())
-                                    }
-                                }
-                                .build()
+                        val options = uiState.optionList
 
-                            AsyncImage(
-                                model = R.drawable.ai_loading,
-                                contentDescription = null,
-                                imageLoader = imageLoader,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(300.dp)
-                            )
+                        if (options.isNullOrEmpty()) {
+                            AILoadingPlaceholder()
+                            return
+                        }
+
+                        options.forEach { option ->
+                            OptionItem(
+                                option = option,
+                                isCorrectAnswer = uiState.isCorrectAnswerSelected,
+                                selectedOption = uiState.selectedOption
+                            ) {
+                                viewModel.selectOption(option)
+                            }
                         }
                     }
                 }

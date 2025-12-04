@@ -30,7 +30,8 @@ class GuessAlbumViewModel @Inject constructor(
         updateRemainingTime()
         getGlobalChartAlbumListUseCase.invoke().getData(onDataReceived = { response ->
             val lastScore = getScoreUseCase.invoke(type = _uiState.value.type)
-            _uiState.update { it.copy(questionList = response ?: listOf(), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0) }
+            _uiState.update { it.copy(questionList = response ?: listOf(), currentAlbum = response?.getOrNull(0), questionCount = response?.size ?: 0, lastGameScore = lastScore?.score ?: 0) }
+            getQuestionOptions()
         }).launchIn(viewModelScope)
     }
 
@@ -56,11 +57,11 @@ class GuessAlbumViewModel @Inject constructor(
         }
         viewModelScope.launch {
             delay(500)
-            prodceedToNextQuestion()
+            proceedToNextQuestion()
         }
     }
 
-    private fun prodceedToNextQuestion() {
+    private fun proceedToNextQuestion() {
         if (_uiState.value.questionList.last() == _uiState.value.currentAlbum) {
             _uiState.update { it.copy(isQuizFinished = true) }
             saveScoreUseCase.invoke(type = _uiState.value.type, score = _uiState.value.correctAnswerCount)
@@ -79,7 +80,7 @@ class GuessAlbumViewModel @Inject constructor(
         }
     }
 
-    fun getQuestionOptions() {
+    private fun getQuestionOptions() {
         getAIResponseUseCase.invoke("Top 3 most similar album name that has similar cover photo with this ${_uiState.value.currentAlbum?.title}.").getData(onDataReceived = { res ->
             _uiState.update { state ->
                 val options = res
