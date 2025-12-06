@@ -9,7 +9,6 @@ import com.example.lyricsgame.domain.usecase.score.SaveScoreUseCase
 import com.example.lyricsgame.domain.usecase.track.GetTopTrackListByGenreUseCase
 import com.example.lyricsgame.domain.viewentity.GameType
 import com.example.lyricsgame.mediaplayer.MediaPlayer
-import com.example.lyricsgame.mediaplayer.MediaPlayerState
 import com.example.lyricsgame.ui.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -31,7 +30,7 @@ class GuessTrackViewModel @Inject constructor(
     private val getAIResponseUseCase: GetAIResponseUseCase,
     private val getScoreUseCase: GetScoreUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
-    private val mediaPlayer: MediaPlayer
+    val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(GuessTrackUiState())
@@ -118,14 +117,14 @@ class GuessTrackViewModel @Inject constructor(
     private fun play() {
         _uiState.value.currentTrack?.let {
             mediaPlayer.setUp(it.preview, onEvent = { playerState ->
-                if (playerState == MediaPlayerState.PLAYING) {
+                if (playerState) {
                     updateJob?.cancel()
                     updateJob = viewModelScope.launch(Dispatchers.Main) {
-                        _uiState.update { currentState -> currentState.copy(sliderPosition = 0) }
+                        _uiState.update { state -> state.copy(sliderPosition = 0) }
                         while (isActive && _uiState.value.sliderPosition < 10) {
                             delay(1000)
-                            _uiState.update { current ->
-                                current.copy(sliderPosition = current.sliderPosition + 1)
+                            _uiState.update { state ->
+                                state.copy(sliderPosition = state.sliderPosition + 1)
                             }
                         }
                     }
@@ -133,6 +132,7 @@ class GuessTrackViewModel @Inject constructor(
             })
         }
     }
+
 
     fun selectOption(trackTitle: String) {
         _uiState.update { state ->

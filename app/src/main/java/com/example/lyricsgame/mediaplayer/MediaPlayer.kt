@@ -14,28 +14,32 @@ class MediaPlayer @Inject constructor(private val context: Context) {
 
     private var listener: Player.Listener? = null
 
+    val currentPosition = mediaPlayer?.currentPosition
 
-    fun setUp(vararg url: String, playWhenReady: Boolean = true, onEvent: (MediaPlayerState) -> Unit) {
+
+    fun setUp(vararg url: String, playWhenReady: Boolean = true, onEvent: (Boolean) -> Unit) {
         initialize(playWhenReady = playWhenReady, onEvent = { state -> onEvent.invoke(state) }) {
-            val mediaItems = url.map { MediaItem.Builder()
-                .setUri(it)
-                .setClippingConfiguration(
-                    MediaItem.ClippingConfiguration.Builder()
-                        .setStartPositionMs(0)
-                        .setEndPositionMs(10000)
-                        .build()
-                )
-                .build() }
+            val mediaItems = url.map {
+                MediaItem.Builder()
+                    .setUri(it)
+                    .setClippingConfiguration(
+                        MediaItem.ClippingConfiguration.Builder()
+                            .setStartPositionMs(0)
+                            .setEndPositionMs(10000)
+                            .build()
+                    )
+                    .build()
+            }
             addMediaItems(mediaItems)
         }
     }
 
-    private fun initialize(playWhenReady: Boolean = true, onEvent: (MediaPlayerState) -> Unit, setUp: ExoPlayer.() -> Unit) {
+    private fun initialize(playWhenReady: Boolean = true, onEvent: (Boolean) -> Unit, setUp: ExoPlayer.() -> Unit) {
         listener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
                 super.onEvents(player, events)
                 with(player) {
-                    onEvent.invoke(playbackState.toPlayerState(isPlaying))
+                    onEvent.invoke(isPlaying)
                 }
             }
         }
