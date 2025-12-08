@@ -5,7 +5,6 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.Player
 import androidx.media3.common.Player.Listener
 import androidx.media3.exoplayer.ExoPlayer
-import androidx.media3.exoplayer.util.EventLogger
 import javax.inject.Inject
 
 class MediaPlayer @Inject constructor(private val context: Context) {
@@ -14,11 +13,8 @@ class MediaPlayer @Inject constructor(private val context: Context) {
 
     private var listener: Player.Listener? = null
 
-    val currentPosition = mediaPlayer?.currentPosition
-
-
-    fun setUp(vararg url: String, playWhenReady: Boolean = true, onEvent: (Boolean) -> Unit) {
-        initialize(playWhenReady = playWhenReady, onEvent = { state -> onEvent.invoke(state) }) {
+    fun setUp(url: List<String>, onEvent: (Boolean) -> Unit) {
+        initialize(onEvent = { state -> onEvent.invoke(state) }) {
             val mediaItems = url.map {
                 MediaItem.Builder()
                     .setUri(it)
@@ -34,7 +30,7 @@ class MediaPlayer @Inject constructor(private val context: Context) {
         }
     }
 
-    private fun initialize(playWhenReady: Boolean = true, onEvent: (Boolean) -> Unit, setUp: ExoPlayer.() -> Unit) {
+    private fun initialize(onEvent: (Boolean) -> Unit, setUp: ExoPlayer.() -> Unit) {
         listener = object : Player.Listener {
             override fun onEvents(player: Player, events: Player.Events) {
                 super.onEvents(player, events)
@@ -43,20 +39,24 @@ class MediaPlayer @Inject constructor(private val context: Context) {
                 }
             }
         }
-        if (mediaPlayer?.isPlaying == true) {
-            mediaPlayer?.stop()
-        }
         mediaPlayer = ExoPlayer.Builder(context).build().apply {
             addListener(listener as Listener)
-            addAnalyticsListener(EventLogger())
             setUp()
             prepare()
-            setPlayWhenReady(playWhenReady)
+            playWhenReady = false
         }
     }
 
-    fun stop() {
-        mediaPlayer?.stop()
+    fun pause() {
+        mediaPlayer?.pause()
+    }
+
+    fun play() {
+        mediaPlayer?.play()
+    }
+
+    fun seekToNextSong() {
+        mediaPlayer?.seekToNextMediaItem()
     }
 
     fun release() {

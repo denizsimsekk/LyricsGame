@@ -30,7 +30,7 @@ class GuessTrackViewModel @Inject constructor(
     private val getAIResponseUseCase: GetAIResponseUseCase,
     private val getScoreUseCase: GetScoreUseCase,
     private val saveScoreUseCase: SaveScoreUseCase,
-    val mediaPlayer: MediaPlayer
+    private val mediaPlayer: MediaPlayer
 ) : BaseViewModel() {
 
     private val _uiState = MutableStateFlow(GuessTrackUiState())
@@ -38,7 +38,7 @@ class GuessTrackViewModel @Inject constructor(
 
     private var updateJob: Job? = null
 
-    fun getGenreSongList(type: GameType, genreId: Int?, artistId: Int? = null) {
+    fun getTrackList(type: GameType, genreId: Int?, artistId: Int? = null) {
         updateRemainingTime()
         val score = when (type) {
             GameType.GLOBAL_TRACKS -> getScoreUseCase.invoke(type, null)
@@ -71,6 +71,7 @@ class GuessTrackViewModel @Inject constructor(
                     lastGameScore = score?.score ?: 0
                 )
             }
+            setUpMediaPlayer()
             getQuestionOptions()
         }).launchIn(viewModelScope)
     }
@@ -99,7 +100,7 @@ class GuessTrackViewModel @Inject constructor(
 
                 state.copy(optionList = options, aiError = false)
             }
-            play()
+            mediaPlayer.play()
         }, onError = {
             _uiState.update { currentState ->
                 val nextPosition = currentState.currentPosition + 1
@@ -114,23 +115,21 @@ class GuessTrackViewModel @Inject constructor(
         }).launchIn(viewModelScope)
     }
 
-    private fun play() {
-        _uiState.value.currentTrack?.let {
-            mediaPlayer.setUp(it.preview, onEvent = { playerState ->
-                if (playerState) {
-                    updateJob?.cancel()
-                    updateJob = viewModelScope.launch(Dispatchers.Main) {
-                        _uiState.update { state -> state.copy(sliderPosition = 0) }
-                        while (isActive && _uiState.value.sliderPosition < 10) {
-                            delay(1000)
-                            _uiState.update { state ->
-                                state.copy(sliderPosition = state.sliderPosition + 1)
-                            }
+    private fun setUpMediaPlayer() {
+        mediaPlayer.setUp(_uiState.value.questionList?.map { it.preview } ?: listOf(), onEvent = { playerState ->
+            if (playerState) {
+                updateJob?.cancel()
+                updateJob = viewModelScope.launch(Dispatchers.Main) {
+                    _uiState.update { state -> state.copy(sliderPosition = 0) }
+                    while (isActive && _uiState.value.sliderPosition < 10) {
+                        delay(1000)
+                        _uiState.update { state ->
+                            state.copy(sliderPosition = state.sliderPosition + 1)
                         }
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
 
@@ -150,6 +149,8 @@ class GuessTrackViewModel @Inject constructor(
     }
 
     private fun proceedToNextSong() {
+        updateJob?.cancel()
+        mediaPlayer.pause()
         if (_uiState.value.questionList?.last() == _uiState.value.currentTrack) {
             _uiState.update { it.copy(isQuizFinished = true) }
             _uiState.value.type?.let {
@@ -172,10 +173,9 @@ class GuessTrackViewModel @Inject constructor(
                     selectedTrackTitle = null
                 )
             }
+            mediaPlayer.seekToNextSong()
             getQuestionOptions()
         }
-        updateJob?.cancel()
-        mediaPlayer.stop()
     }
 
     override fun onCleared() {

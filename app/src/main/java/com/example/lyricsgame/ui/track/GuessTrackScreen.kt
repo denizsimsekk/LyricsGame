@@ -52,7 +52,7 @@ private fun MainContent(type: GameType, genreId: Int?, artistId: Int? = null, vi
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(Unit) {
-        viewModel.getGenreSongList(type = type, genreId = genreId, artistId = artistId)
+        viewModel.getTrackList(type = type, genreId = genreId, artistId = artistId)
     }
 
     if (uiState.aiError) {
