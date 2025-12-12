@@ -1,6 +1,6 @@
 package com.example.lyricsgame.data.repository
 
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import com.example.lyricsgame.domain.repository.IAIRepository
 import com.google.firebase.ai.GenerativeModel
 import kotlinx.coroutines.flow.Flow

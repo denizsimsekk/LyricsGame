@@ -1,7 +1,7 @@
 package com.example.lyricsgame.data.repository
 
 import com.example.lyricsgame.data.model.GlobalChart
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import com.example.lyricsgame.data.model.ResponseDto
 import com.example.lyricsgame.data.remote.Api
 import com.example.lyricsgame.domain.repository.IGlobalChartRepository

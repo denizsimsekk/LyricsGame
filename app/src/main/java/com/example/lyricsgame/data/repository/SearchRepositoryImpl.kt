@@ -1,6 +1,6 @@
 package com.example.lyricsgame.data.repository
 
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import com.example.lyricsgame.data.remote.Api
 import com.example.lyricsgame.domain.repository.ISearchRepository
 import com.example.lyricsgame.domain.viewentity.ArtistViewEntity

@@ -1,7 +1,7 @@
 package com.example.lyricsgame.ui.base
 
 import androidx.lifecycle.ViewModel
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow

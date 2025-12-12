@@ -1,4 +1,4 @@
-package com.example.lyricsgame.data.model
+package com.example.lyricsgame.domain.util
 
 sealed class Resource<out T> {
     data class Success<out T>(val data: T) : Resource<T>()

@@ -1,6 +1,6 @@
 package com.example.lyricsgame.domain.usecase.ai
 
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import com.example.lyricsgame.domain.repository.IAIRepository
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow

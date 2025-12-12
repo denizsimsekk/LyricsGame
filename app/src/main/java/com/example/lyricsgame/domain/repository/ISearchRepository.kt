@@ -1,6 +1,6 @@
 package com.example.lyricsgame.domain.repository
 
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import com.example.lyricsgame.domain.viewentity.ArtistViewEntity
 import kotlinx.coroutines.flow.Flow
 

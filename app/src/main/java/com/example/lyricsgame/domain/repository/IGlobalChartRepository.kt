@@ -1,7 +1,7 @@
 package com.example.lyricsgame.domain.repository
 
 import com.example.lyricsgame.data.model.GlobalChart
-import com.example.lyricsgame.data.model.Resource
+import com.example.lyricsgame.domain.util.Resource
 import com.example.lyricsgame.domain.viewentity.AlbumViewEntity
 import com.example.lyricsgame.domain.viewentity.ArtistViewEntity
 import com.example.lyricsgame.domain.viewentity.TrackViewEntity
