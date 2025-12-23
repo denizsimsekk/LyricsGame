@@ -33,3 +33,6 @@ Hilt – Dependency Injection
 <br>
 <img width="250" alt="Screenshot_20251212_114342" src="https://github.com/user-attachments/assets/b21d1a74-46d9-48af-8a56-8a376a118d67" />
 <img width="250" alt="Screenshot_20251212_114402" src="https://github.com/user-attachments/assets/f3217af6-2978-4db7-bd40-6e45c9a978f4" />
+
+Medium link about using media player:  
+[http://medium.com/@ddenizsimsekk/using-exoplayer-in-jetpack-compose-db000fe12b45](http://medium.com/@ddenizsimsekk/using-exoplayer-in-jetpack-compose-db000fe12b45)
