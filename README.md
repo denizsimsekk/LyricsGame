@@ -3,6 +3,14 @@
 A fun and interactive music quiz app built with Jetpack Compose, Clean Architecture, and ExoPlayer.
 Test your music knowledge through multiple game modes: Guess the Track, Guess the Album, and Guess the Artist.
 
+🤖 AI & Intelligence
+
+Gemini API – Used to analyze user answers and find the most similar options when generating quiz choices
+
+- Helps provide smarter and more relevant distractors
+
+- Improves quiz quality by avoiding random or unrelated answers
+
 🛠️ Tech Stack
 
 **Architecture**
