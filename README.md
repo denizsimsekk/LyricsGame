@@ -15,25 +15,25 @@ Gemini API – Used to analyze user answers and find the most similar options wh
 
 **Architecture**
 
-Clean Architecture
+- Clean Architecture
 
-MVVM
+- MVVM
 
 **Libraries & Tools**
 
-Jetpack Compose – Modern UI toolkit
+- Jetpack Compose – Modern UI toolkit
 
-ExoPlayer – Audio playback for track previews
+- ExoPlayer – Audio playback for track previews
 
-Retrofit – Networking layer
+- Retrofit – Networking layer
 
-Coil – Image loading + transformations (blur for quizzes)
+- Coil – Image loading + transformations (blur for quizzes)
 
-Room Database – Local caching and storing scores
+- Room Database – Local caching and storing scores
 
-Kotlin Coroutines / Flows – Asynchronous and reactive data handling
+- Kotlin Coroutines / Flows – Asynchronous and reactive data handling
 
-Hilt – Dependency Injection
+- Hilt – Dependency Injection
 
 
 <img width="250" alt="Screenshot_20251212_114316" src="https://github.com/user-attachments/assets/fe2a257b-9ca0-4596-b6c1-a39a6113d64c" />
